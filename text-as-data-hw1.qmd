@@ -7,12 +7,15 @@ editor: visual
 
 # Text as Data: Homework 1
 
-### Clarke Campbell September 11, 2026
+### Clarke Campbell 
+
+### September 11, 2026
 
 ## Pre-Existing Tutorial Information
 
 ```{r}
-#In these code chunks, I am loading and setting up the data like it was done in the tutorial.
+# In these code chunks, I am loading and setting up the data 
+# like it was done in the tutorial.
 library(readr)
 library(dplyr)
 library(tidyr)
@@ -74,7 +77,11 @@ words_stopwords_removed <- words |>
 total_word_count <- words |>
   count(doc_title)
 
-# Here, I am counting the words from my stopword-removed 'words_stopwords_removed' tibble, joining the counts of both documents, renaming and relocating the columns appropriately, and creating columns for the removed tokens' number and percentage. 
+# Here, I am counting the words from my stopword-removed 
+# 'words_stopwords_removed' tibble, joining the counts of 
+# both documents, renaming and relocating the columns 
+# appropriately, and creating columns for the removed tokens'
+# number and percentage. 
 corpus_diagnostics <- words_stopwords_removed |>
   count(doc_title) |>
   full_join(total_word_count, by = join_by(doc_title)) |>
@@ -99,7 +106,9 @@ corpus_diagnostics
 ```{r}
 #| label: word-frequency-no-removals
 
-#Here, I am counting the frequency of words across both documents before stopword removal and sorting them by the most frequent words.
+# Here, I am counting the frequency of words 
+# across both documents before stopword removal 
+# and sorting them by the most frequent words.
 
 word_frequency_no_removals <- words |>
   count(doc_title, word, sort = TRUE) |>
@@ -144,7 +153,9 @@ word_frequency_no_removals |>
 ```{r}
 #| label: word-frequency-stopwords-removed
 
-#Here, I am counting the frequency of words across both documents *AFTER* stopword removal and sorting them by the most frequent words.
+# Here, I am counting the frequency of words 
+# across both documents *AFTER* stopword removal 
+# and sorting them by the most frequent words.
 
 word_frequency_stopwords_removed <- words_stopwords_removed |>
   count(doc_title, word, sort = TRUE) |>
@@ -195,12 +206,17 @@ There are two clear drawbacks of removing the stopwords that we have removed, be
 ## Section III
 
 ```{r}
-#Here, I am removing only the tidytext standard stopwords, keeping the additional Early Modern stopwords that we previously identified. 
+# Here, I am removing only the tidytext standard
+# stopwords, keeping the additional Early Modern 
+# stopwords that we previously identified. 
 words_standard_stopwords_removed <- words |>
   mutate(word = str_to_lower(word)) |>
   anti_join(stop_words, by = "word")
 
-#Here, I am counting the frequency of the words and displaying the 15 most-frequent words across both texts with only standard tidytext stopwords removed.
+# Here, I am counting the frequency of the words 
+# and displaying the 15 most-frequent words across 
+# both texts with only standard tidytext stopwords 
+# removed.
 words_standard_stopwords_removed |>
   count(doc_title, word, sort = TRUE) |>
   pivot_wider(
