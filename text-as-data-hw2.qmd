@@ -1,0 +1,237 @@
+---
+title: "Text as Data HW 2"
+author: "Clarke Campbell"
+format: pdf
+editor: visual
+---
+
+# Text as Data: Homework 2
+
+### Clarke Campbell
+
+### October 2, 2026
+
+## Pre-Existing Tutorial Information
+
+```{r}
+#| output: FALSE
+
+# In these code chunks, I am loading and setting up the data 
+# like it was done in the tutorial.
+library(readr)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(tidytext)
+library(ggplot2)
+library(forcats)
+library(tibble)
+library(scales)
+```
+
+```{r}
+#| label: creating-text-tibble
+file_a <- "texts/A07594__Circle_of_Commerce.txt"
+file_b <- "texts/B14801__Free_Trade.txt"
+file_c <-  "texts/A06785.txt"
+
+# Reading the raw text files into R.
+text_a <- read_file(file_a)
+text_b <- read_file(file_b)
+text_c <- read_file(file_c)
+
+# Combining into a tibble for tidytext workflows.
+texts <- tibble(
+  doc_title = c("Text A", "Text B", "Text C"),
+  text = c(text_a, text_b, text_c)
+)
+
+texts
+```
+
+```{r}
+#| label: removing-basic-stopwords
+
+# Here, I am creating a data set of stopwords (including custom ones).
+
+data("stop_words")
+
+custom_stopwords <- tibble(
+  word = c(
+    "vnto", "haue", "doo", "hath", "bee", "ye", "thee"
+  )
+)
+
+all_stopwords <- bind_rows(stop_words, custom_stopwords) %>%
+  distinct(word)
+```
+
+## Section I
+
+```{r}
+#| label: tokenizing-by-word
+
+words <- texts |>
+  unnest_tokens(word, text)
+
+# Here, I am removing the stopwords from my broader 'words' tibble 
+# and normalizing the long s.
+words_stopwords_removed <- words |>
+  mutate(word = str_to_lower(word),
+         word = str_replace_all(word, "ſ", "s")
+         )|>
+  anti_join(all_stopwords, by = "word")
+
+words_stopwords_removed
+
+# Here, I am loading the Bing dictionary and joining it with my 
+# stopword-free token data sets.
+bing <- get_sentiments("bing") 
+
+words_bing_sentiment <- words_stopwords_removed |>
+  inner_join(bing, by = "word", relationship ="many-to-many")
+
+# Here, I am counting the positive and negative words, 
+# displaying them in a wider format, and showing net sentiment.
+words_bing_sentiment_wide <- words_bing_sentiment |>
+  group_by(doc_title, sentiment) |>
+  count() |>
+  ungroup() |>
+  pivot_wider(names_from = sentiment, values_from = n) |>
+  relocate(positive, .after = doc_title) |>
+  mutate(net_sentiment = (positive - negative)) |>
+  filter(doc_title != "Text C")
+
+words_bing_sentiment_wide
+```
+
+## Section II
+
+```{r}
+#| label: tf-idf
+
+library(quanteda)
+library(quanteda.textstats)
+
+# Creating a quanteda corpus of the three documents;
+# Treating long s as short s for parity with previous processing
+threedoc_corpus <- corpus(
+  gsub("ſ", "s", texts$text, fixed = TRUE)
+  )
+
+# Removing punctuation, symbols, and all stopwords, and 
+# lowercasing tokens to match my tidytext preprocessing 
+# decisions - not removing numbers, because I didn't remove 
+# those earlier
+threedoc_tokens <- tokens(threedoc_corpus,
+       remove_punct   = TRUE,
+       remove_symbols = TRUE)
+
+threedoc_tokens <- tokens_tolower(threedoc_tokens)
+
+threedoc_tokens <- tokens_remove(threedoc_tokens, pattern = all_stopwords$word)
+
+threedoc_tokens
+
+# Creating a document feature matrix for the three tokenized documents
+dfm_threedocs <- dfm(threedoc_tokens)
+
+dfm_threedocs
+
+# Checking the top words in the document feature matrix; 
+# they seem plausible
+topfeatures(dfm_threedocs, 25)
+
+# Calculating the document feature matrix TF-IDF scores
+dfm_tfidf_threedocs <- dfm_tfidf(dfm_threedocs)
+
+# Converting to a dataframe, pivoting to long, removing Text C
+words_tfidf_twodocs <- convert(dfm_tfidf_threedocs, to = "data.frame") |>
+  pivot_longer(cols = !doc_id, names_to = "word", values_to = "tf_idf") |>
+  filter(doc_id != "text3")
+
+# Joining the TF-IDF words with Bing sentiments
+
+words_tfidf_sentiment <- inner_join(words_tfidf_twodocs, bing, by = "word", relationship ="many-to-many") |>
+  arrange(desc(tf_idf))
+
+words_tfidf_sentiment
+
+# Summing TF-IDF sentiments, pivoting wider
+words_tfidf_sentiment_wide <- words_tfidf_sentiment |>
+  group_by(doc_id, sentiment) |>
+  reframe(tf_idf_totals = sum(tf_idf)) |>
+  pivot_wider(names_from = sentiment, values_from = tf_idf_totals) |>
+  relocate(positive, .after = doc_id) |>
+  rename("positive_tf_idf_sum" = positive) |>
+  rename("negative_tf_idf_sum" = negative) |>
+  mutate(net_tf_idf_sentiment = (positive_tf_idf_sum - negative_tf_idf_sum))
+
+words_tfidf_sentiment_wide
+```
+
+## Section III
+
+```{r}
+
+# Setting 'doc_title' equal and joining summary tables
+words_tfidf_and_count <- words_tfidf_sentiment_wide |>
+  mutate(doc_title = case_when(doc_id == "text1" ~ "Text A", doc_id == "text2" ~ "Text B" )) |>
+  select(!doc_id) |>
+  relocate(doc_title, .before = positive_tf_idf_sum) |>
+  inner_join(words_bing_sentiment_wide, by = join_by(doc_title))
+
+words_tfidf_and_count
+
+# Exporting the joined summary table as a CSV
+
+write_csv(words_tfidf_and_count, "words_tfidf_and_count.csv")
+```
+
+## Section IV
+
+1.  **What changed between the two methods?**
+
+Each of the methods suggests something different: by raw count, in both documents, there are more positive sentiment words than negative sentiment words, but when weighted for TF-IDF significance, there is more negative sentiment than positive sentiment across both texts.
+
+2.  **Why did TF-IDF alter the results?**
+
+TF-IDF assigned more weight to words that are highly prevalent in a single document but comparatively rare across the corpus. As a result, comparatively more "significant" words in each text are weighted more heavily by TF-IDF (and perhaps some ubiquitous positive words like "gain" or "free" were weighted lightly because of their ubiquity).
+
+3.  **Which specific words drove the changes?**
+
+While there were a few high TF-IDF positive words, like "passion," "divine," "affection," "humane," and "orderly," almost every other high TF-IDF word was negative, like "imposition," "impertinent," "disorderly," "imperfect," "meddle," "kill," "scandalous," "wrong," "forbid," "strictly," "petty," "idle," "deficient," et cetera.
+
+4.  **When would each method be more appropriate? What limitation does document length create for the raw-count sentiment measure?**
+
+Raw counts might be more appropriate if the exact absolute frequency of certain words mattered more, especially with very short documents. On the other hand, for longer documents, raw counts are made less effective because of the inherent redundancy as texts get longer (because there are only so many function words in the English language); in such situations, as well as when there are mismatches between document lengths (as longer documents will have higher raw counts in general, and thus higher numbers of sentiment words), TF-IDF is more appropriate. Another situation where TF-IDF is preferable is when there are high-frequency words across all texts that thus reveal very little about their relative importance to specific documents (like if every document has the same positive language preamble, or header, or a similar convention, for example).
+
+## Section V (Challenge)
+
+```{r}
+# Summing positive and negative TF-IDF sums from previous code
+total_tfidf_sentiment <- words_tfidf_and_count |>
+  mutate(total_tf_idf_sentiment = positive_tf_idf_sum + negative_tf_idf_sum) |>
+  select(doc_title, total_tf_idf_sentiment)
+
+total_tfidf_sentiment
+
+# Determining total sentiment of top 5 sentiment words in each text
+top5_tfidf_sentiment <- words_tfidf_sentiment |>
+  mutate(overall_rank = min_rank(desc(tf_idf))) |>
+  group_by(doc_id) |>
+  slice_max(tf_idf, n = 5, with_ties = FALSE) |>
+  mutate(total_top5_sentiment = sum(tf_idf)) |>
+  mutate(doc_title = case_when(doc_id == "text1" ~ "Text A", doc_id == "text2" ~ "Text B" )) |>
+  ungroup() |>
+  select(doc_title, total_top5_sentiment) |>
+  distinct()
+  
+top5_tfidf_sentiment
+
+# Joining top 5 and total sentiment, calculating proportion
+inner_join(top5_tfidf_sentiment, total_tfidf_sentiment, by = join_by(doc_title)) |>
+  mutate(prop_top5_sentiment = total_top5_sentiment / total_tf_idf_sentiment)
+```
+
+In Text A, 10.48% of the sentiment is carried by the top 5 words. In Text B, 13.59% of the sentiment is carried in the top 5 words.

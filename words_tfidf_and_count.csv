@@ -1,0 +1,3 @@
+doc_title,positive_tf_idf_sum,negative_tf_idf_sum,net_tf_idf_sentiment,positive,negative,net_sentiment
+Text A,63.52095654257081,85.87186930023402,-22.350912757663217,489,422,67
+Text B,32.69502965852134,42.75984339106133,-10.064813732539989,344,281,63
