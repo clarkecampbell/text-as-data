@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Clarke Campbell">
+
+<title>Text as Data: Data Exploration</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="text-as-data-data-exploration_files/libs/clipboard/clipboard.min.js"></script>
+<script src="text-as-data-data-exploration_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="text-as-data-data-exploration_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="text-as-data-data-exploration_files/libs/quarto-html/popper.min.js"></script>
+<script src="text-as-data-data-exploration_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="text-as-data-data-exploration_files/libs/quarto-html/anchor.min.js"></script>
+<link href="text-as-data-data-exploration_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="text-as-data-data-exploration_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="text-as-data-data-exploration_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="text-as-data-data-exploration_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="text-as-data-data-exploration_files/libs/bootstrap/bootstrap-e5aac6255e56e914aa88ebe61abbe2ca.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Text as Data: Data Exploration</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Clarke Campbell </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="text-as-data-data-exploration" class="level1">
+<h1>Text as Data: Data Exploration</h1>
+<section id="clarke-campbell" class="level3">
+<h3 class="anchored" data-anchor-id="clarke-campbell">Clarke Campbell</h3>
+</section>
+<section id="october-14-2026" class="level3">
+<h3 class="anchored" data-anchor-id="october-14-2026">October 14, 2026</h3>
+</section>
+<section id="loading-packages" class="level2">
+<h2 class="anchored" data-anchor-id="loading-packages">Loading Packages</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xml2)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda.textstats)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpattern)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggwordcloud)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(udpipe)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="loading-and-formatting-the-text" class="level2">
+<h2 class="anchored" data-anchor-id="loading-and-formatting-the-text">Loading and Formatting the Text</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>full_diaries <span class="ot">&lt;-</span> <span class="fu">read_html</span>(<span class="st">"ArmyDiariesCAW19551956.html"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Removing chapter headings, subheadings, end-of-chapter map captions, and struck-through text</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>full_diaries <span class="sc">|&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_elements</span>(<span class="st">"span.c8.c24, span.c18.c8, span.c8.c30, span.c23, span.c6"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xml_remove</span>()</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Splitting the diary by entry date (e.g., "Jan XX") - C14 is typical, C36 C30 where there is additional text in the entry date line, and C27 C9 in the green supplementary chapter (January 1956)</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">xml_add_sibling</span>(<span class="fu">html_elements</span>(full_diaries, <span class="st">"span.c14, span.c36.c30, span.c27.c9"</span>), <span class="st">"text"</span>, <span class="st">"||SPLIT_HERE||"</span>, <span class="at">.where =</span> <span class="st">"before"</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>full_diary_texts <span class="ot">&lt;-</span> full_diaries <span class="sc">|&gt;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_text2</span>()</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>broken_text_pieces <span class="ot">&lt;-</span> <span class="fu">str_split</span>(full_diary_texts, <span class="st">"</span><span class="sc">\\</span><span class="st">|</span><span class="sc">\\</span><span class="st">|SPLIT_HERE</span><span class="sc">\\</span><span class="st">|</span><span class="sc">\\</span><span class="st">|"</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Cleaning up any empty strings resulting from the splits</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>cleaned_entry_pieces <span class="ot">&lt;-</span> broken_text_pieces[<span class="fu">str_length</span>(<span class="fu">str_trim</span>(broken_text_pieces)) <span class="sc">&gt;</span> <span class="dv">0</span>]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Removing the diary document front matter (table of contents, contacts, etc.)</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>cleaned_entry_pieces <span class="ot">&lt;-</span> cleaned_entry_pieces[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Removing the single duplicate entry header (Jan 1, 1956): </span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>cleaned_entry_pieces <span class="ot">&lt;-</span> cleaned_entry_pieces[<span class="sc">-</span><span class="dv">368</span>]</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co"># There are 682 documents in the corpus: one for each day from December 30, 1954 to November 10, 1956.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Combining into a tibble for tidytext workflows</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>diary_tibble_raw <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">text_id =</span> <span class="fu">seq_along</span>(cleaned_entry_pieces),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">text =</span> cleaned_entry_pieces</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Separating the initial date information for each entry</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>diary_tibble_clean <span class="ot">&lt;-</span> diary_tibble_raw <span class="sc">|&gt;</span> <span class="co"># Separating the entire header</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">date_header =</span> <span class="fu">str_extract</span>(text, <span class="st">"^[^</span><span class="sc">\\</span><span class="st">n</span><span class="sc">\\</span><span class="st">r]+"</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">text_body =</span> <span class="fu">str_remove</span>(text, <span class="st">"^[^</span><span class="sc">\\</span><span class="st">n</span><span class="sc">\\</span><span class="st">r]+[</span><span class="sc">\\</span><span class="st">n</span><span class="sc">\\</span><span class="st">r]+"</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span>text) <span class="sc">|&gt;</span> <span class="co"># Splitting the header into date and caption (including year)</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate_wider_regex</span>(</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> date_header,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">patterns =</span> <span class="fu">c</span>(<span class="at">date_header =</span> <span class="st">".{6}"</span>, <span class="at">caption =</span> <span class="st">".*"</span>),</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols_remove =</span> <span class="cn">TRUE</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">case_when</span>( <span class="co"># Assigning the right year to all documents</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>      text_id <span class="sc">==</span> <span class="dv">1</span> <span class="sc">|</span> text_id <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"1954"</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>      text_id <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">&amp;</span> text_id <span class="sc">&lt;</span> <span class="dv">368</span> <span class="sc">~</span> <span class="st">"1955"</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>      text_id <span class="sc">&gt;=</span> <span class="dv">368</span> <span class="sc">~</span> <span class="st">"1956"</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">full_date =</span> <span class="fu">ymd</span>(<span class="fu">paste</span>(year, date_header)),</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">week_day =</span> <span class="fu">as.factor</span>(<span class="fu">weekdays</span>(full_date)),</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">week_day =</span> <span class="fu">factor</span>(week_day, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Sunday"</span>, <span class="st">"Monday"</span>, <span class="st">"Tuesday"</span>, <span class="st">"Wednesday"</span>, <span class="st">"Thursday"</span>, <span class="st">"Friday"</span>, <span class="st">"Saturday"</span>)),</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">month =</span> <span class="fu">month</span>(full_date),</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">month2 =</span> <span class="fu">case_when</span>(</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>      year <span class="sc">==</span> <span class="dv">1954</span> <span class="sc">~</span> (month <span class="sc">-</span> <span class="dv">12</span>),</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>      year <span class="sc">==</span> <span class="dv">1955</span> <span class="sc">~</span> month,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>      year <span class="sc">==</span> <span class="dv">1956</span> <span class="sc">~</span> month <span class="sc">+</span> <span class="dv">12</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>diary_tibble_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 682 × 9
+   text_id date_header caption  text_body year  full_date  week_day month month2
+     &lt;int&gt; &lt;chr&gt;       &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt; &lt;date&gt;     &lt;fct&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+ 1       1 DEC 30      " 1954"  "Had lun… 1954  1954-12-30 Thursday    12      0
+ 2       2 DEC 31      ""       " Spent … 1954  1954-12-31 Friday      12      0
+ 3       3 JAN 01      " 1955"  " Arrive… 1955  1955-01-01 Saturday     1      1
+ 4       4 JAN 02      " (SUND… " Arrive… 1955  1955-01-02 Sunday       1      1
+ 5       5 JAN 03      ""       " The tr… 1955  1955-01-03 Monday       1      1
+ 6       6 JAN 04      ""       " Visite… 1955  1955-01-04 Tuesday      1      1
+ 7       7 JAN 05      ""       " Took a… 1955  1955-01-05 Wednesd…     1      1
+ 8       8 JAN 06      ""       " It rai… 1955  1955-01-06 Thursday     1      1
+ 9       9 JAN 07      ""       " I had … 1955  1955-01-07 Friday       1      1
+10      10 JAN 08      ""       " Checke… 1955  1955-01-08 Saturday     1      1
+# ℹ 672 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="calculating-tf-idf" class="level2">
+<h2 class="anchored" data-anchor-id="calculating-tf-idf">Calculating TF-IDF</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a quanteda corpus from the tibble above</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>full_corpus <span class="ot">&lt;-</span> <span class="fu">corpus</span>(diary_tibble_clean, <span class="at">text_field =</span> <span class="st">"text_body"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Tokenizing the quanteda corpus</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>diary_tokens_quanteda <span class="ot">&lt;-</span> <span class="fu">tokens</span>(full_corpus)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Determining which words I should re-compound before proceeding by searching for capitalized words next to each other</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>diary_tokens_quanteda <span class="ot">&lt;-</span> <span class="fu">tokens_replace</span>(</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  diary_tokens_quanteda, </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="fu">phrase</span>(<span class="st">"St . Louis"</span>), </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">replacement =</span> <span class="fu">phrase</span>(<span class="st">"St Louis"</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>diary_tokens_quanteda <span class="ot">&lt;-</span> <span class="fu">tokens_compound</span>(</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  diary_tokens_quanteda,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="fu">phrase</span>(<span class="fu">c</span>(<span class="st">"L. A"</span>))</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Finding all capital tokens, preserving padding</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>capital_tokens <span class="ot">&lt;-</span> <span class="fu">tokens_select</span>(</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  diary_tokens_quanteda,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="st">"^[A-Z1-9]"</span>,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">valuetype =</span> <span class="st">"regex"</span>,</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">case_insensitive =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">padding =</span> <span class="cn">TRUE</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>capital_tokens_filtered <span class="ot">&lt;-</span> <span class="fu">tokens_select</span>(</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  capital_tokens,</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="fu">paste0</span>(</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">"(?i)^(I|AM|A</span><span class="sc">\\</span><span class="st">.M|PM|AT|AROUND|A|THE|ABOUT|AFTER|AN|ON|IN|FROM"</span>,</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|WITH|WITHIN|"</span>,</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CONCERNING|BORROWED|CALLED|DISCUSSED|EVIEDENTALLY|INVITED|"</span>,</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MET|REVISITED|SAMPLED|SAW|TOOK|VISITED|APPROXIMATELY|"</span>,</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"BASICALLY|MAINLY)$|^</span><span class="sc">\\</span><span class="st">d+$"</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">valuetype =</span> <span class="st">"regex"</span>,</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">selection =</span> <span class="st">"remove"</span>,</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">padding =</span> <span class="cn">TRUE</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>capitalized_collocs_filtered <span class="ot">&lt;-</span> <span class="fu">textstat_collocations</span>(</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>  capital_tokens_filtered, </span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, </span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_count =</span> <span class="dv">1</span>, </span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">tolower =</span> <span class="cn">FALSE</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in textstat_collocations.tokens(capital_tokens_filtered, size = 2:6, :
+Computation for large collocations may take long time</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>capitalized_collocs_more_than_nested <span class="ot">&lt;-</span> capitalized_collocs_filtered <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(count <span class="sc">&gt;</span> count_nested)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>compound_patterns <span class="ot">&lt;-</span> capitalized_collocs_more_than_nested <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(length)) <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(collocation) <span class="sc">|&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">phrase</span>()</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Compounding the multi-word tokens in the tokenized corpus</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>diary_tokens_compounded <span class="ot">&lt;-</span> <span class="fu">tokens_compound</span>(</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  diary_tokens_quanteda,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> compound_patterns,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">concatenator =</span> <span class="st">" "</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding multi-word tokens that fail the auto filters above</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>diary_tokens_compounded <span class="ot">&lt;-</span> <span class="fu">tokens_compound</span>(</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  diary_tokens_compounded, </span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="fu">phrase</span>(<span class="fu">c</span>(</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Hew Ess A"</span>,</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Charles A Werner"</span>,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Branch 600"</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  )),</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">concatenator =</span> <span class="st">" "</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>diary_tokens_compounded <span class="ot">&lt;-</span> <span class="fu">tokens_compound</span>(</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  diary_tokens_compounded,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"Tail O"</span>, <span class="st">"\u2019"</span>, <span class="st">"the"</span>, <span class="st">"Cock"</span>)),</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">concatenator =</span> <span class="st">" "</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>diary_tokens_compounded <span class="ot">&lt;-</span> <span class="fu">tokens_replace</span>(</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  diary_tokens_compounded,</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"Dow L"</span>, <span class="st">"."</span>, <span class="st">"A"</span>, <span class="st">"."</span>)),</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">replacement =</span> <span class="fu">phrase</span>(<span class="st">"Dow L_A"</span>)</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>diary_tokens_compounded <span class="ot">&lt;-</span> <span class="fu">tokens_replace</span>(</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>  diary_tokens_compounded,</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="fu">phrase</span>(<span class="fu">c</span>(<span class="st">"U.S"</span>, <span class="st">"L.A"</span>)),</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">replacement =</span> <span class="fu">phrase</span>(<span class="fu">c</span>(<span class="st">"U_S"</span>, <span class="st">"L_A"</span>))</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Removing punctuation besides colons (which are largely used for times)</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>diary_tokens_compounded <span class="ot">&lt;-</span> <span class="fu">tokens_replace</span>(</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>  diary_tokens_compounded,</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="st">"[!</span><span class="sc">\"</span><span class="st">“”#$%&amp;()*+,</span><span class="sc">\\</span><span class="st">-./;&lt;=&gt;?@</span><span class="sc">\\</span><span class="st">[</span><span class="sc">\\\\\\</span><span class="st">]^`{|}~]"</span>,</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>  <span class="at">replacement =</span> <span class="st">""</span>,</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">valuetype =</span> <span class="st">"regex"</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Re-compounding time tokens around their colons</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>diary_tokens_compounded <span class="ot">&lt;-</span> <span class="fu">tokens_compound</span>(</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>  diary_tokens_compounded, </span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="fu">phrase</span>(<span class="st">"^</span><span class="sc">\\</span><span class="st">d+$ : ^</span><span class="sc">\\</span><span class="st">d+$"</span>), </span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>  <span class="at">valuetype =</span> <span class="st">"regex"</span>,</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>  <span class="at">concatenator =</span> <span class="st">""</span>)</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Lowercasing the tokens</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>diary_tokens_compounded <span class="ot">&lt;-</span> <span class="fu">tokens_tolower</span>(diary_tokens_compounded)</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Removing stopwords for TF-IDF calculation; I have not identified any clear custom stopwords that also need removal yet.</span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>diary_tokens_compounded_no_stops <span class="ot">&lt;-</span> <span class="fu">tokens_remove</span>(diary_tokens_compounded, <span class="fu">stopwords</span>(<span class="st">"en"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating the DFM</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>diary_dfm_no_stops <span class="ot">&lt;-</span> <span class="fu">dfm</span>(diary_tokens_compounded_no_stops)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Viewing the top features of the DFM to determine their plausibility</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">topfeatures</span>(diary_dfm_no_stops, <span class="dv">25</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  –       one      time      went     quite       get      much 
+    24193      1033       680       574       564       562       550       533 
+      day       see      good    around      many      back    people    little 
+      495       454       449       431       423       422       396       387 
+      got      work    didn’t      took afternoon         2      also        go 
+      384       362       353       342       323       315       314       314 
+  evening 
+      306 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating TF-IDF</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>diary_dfm_tfidf_no_stops <span class="ot">&lt;-</span> <span class="fu">dfm_tfidf</span>(diary_dfm_no_stops)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Converting to a dataframe </span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>diary_tfidf_no_stops_tibble <span class="ot">&lt;-</span> diary_dfm_tfidf_no_stops <span class="sc">|&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">convert</span>(<span class="at">to =</span> <span class="st">"data.frame"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">!</span>doc_id, <span class="at">names_to =</span> <span class="st">"word"</span>, <span class="at">values_to =</span> <span class="st">"tf_idf"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">doc_id =</span> <span class="fu">str_sub</span>(doc_id, <span class="at">start =</span> <span class="dv">5</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">doc_id =</span> <span class="fu">as.integer</span>(doc_id))</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Displaying "Top 10" words by TF-IDF value for each entry</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>top10_tfidf_tibble <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">overall_rank =</span> <span class="fu">min_rank</span>(<span class="fu">desc</span>(tf_idf))) <span class="sc">|&gt;</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id) <span class="sc">|&gt;</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(tf_idf, <span class="at">n =</span> <span class="dv">10</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(doc_id) <span class="sc">|&gt;</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(top10_tfidf_tibble, <span class="at">n =</span> <span class="dv">30</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6,820 × 4
+   doc_id word              tf_idf overall_rank
+    &lt;int&gt; &lt;chr&gt;              &lt;dbl&gt;        &lt;int&gt;
+ 1      1 kansas city        5.67           418
+ 2      1 wabash             2.83          3575
+ 3      1 salt lake city     2.53         10511
+ 4      1 advice             2.06         21862
+ 5      1 space              1.79         29222
+ 6      1 carolyn            1.72         31816
+ 7      1 morton             1.60         35555
+ 8      1 minute             1.53         38345
+ 9      1 mom                1.51         39011
+10      1 obtain             1.47         40593
+11      2 denver             2.83          3575
+12      2 new years eve      2.83          3575
+13      2 idle               2.53         10511
+14      2 chatter            2.53         10511
+15      2 removed            1.93         25201
+16      2 quiet              1.69         32867
+17      2 car                1.27         48501
+18      2 club               1.24         49172
+19      2 train              0.865        63604
+20      2 reading            0.861        63689
+21      3 mormon             8.50            87
+22      3 temple square      2.83          3575
+23      3 layman             2.83          3575
+24      3 tabernacle         2.83          3575
+25      3 sea gull monument  2.83          3575
+26      3 capital building   2.83          3575
+27      3 brigham young      2.83          3575
+28      3 utah               2.83          3575
+29      3 ese                2.83          3575
+30      3 salt lake city     2.53         10511
+# ℹ 6,790 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a word cloud of most common high TF-IDF words across documents</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>top10_tfidf_tibble <span class="sc">|&gt;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(word) <span class="sc">|&gt;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">|&gt;</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">|&gt;</span> <span class="co"># Ensuring most common words are in the middle</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">nchar</span>(word) <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="co"># Removing 1-character words</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">2</span>) <span class="sc">|&gt;</span> <span class="co"># Only plotting words that appear more than twice</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n, <span class="at">color =</span> word)) <span class="sc">+</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>(<span class="at">use_richtext =</span> <span class="cn">FALSE</span>, <span class="at">eccentricity =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="text-as-data-data-exploration_files/figure-html/top10-tf-idf-terms-word-cloud-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave("wordcloud.png", width = 5, height = 3)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Counting 1-character words in Top 10 lists across documents</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>top10_tfidf_tibble <span class="sc">|&gt;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(word) <span class="sc">|&gt;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">|&gt;</span> <span class="co"># Ensuring most common words are in the middle</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">nchar</span>(word) <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reframe</span>(<span class="at">total =</span> <span class="fu">sum</span>(n))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  total
+  &lt;int&gt;
+1    52</code></pre>
+</div>
+</div>
+<section id="interpretation" class="level4">
+<h4 class="anchored" data-anchor-id="interpretation">Interpretation:</h4>
+<p><strong>• Do some documents share distinctive vocabulary?</strong></p>
+<p>Yes, many of the entries share distinctive vocabulary terms. The word cloud above illustrates the most common words shared across the top 10 words by TF-IDF of each entry (e.g., “Japanese,” “Korean,” “India,” etc.).</p>
+<p><strong>• Are distinctive terms topical, rhetorical, or technical?</strong></p>
+<p>Practically all of the distinctive words shared across the diary’s entries are nouns, many of which refer to the nationalities or places that my grandfather described (e.g., Japan, Korea, India, Okinawa, Istanbul, Israel, Hong Kong, Naha) or the types of technically-related objects and concepts he encountered in his work as an Army contract estimator (e.g., contract estimates, cars, buildings, facilities, contractors, etc.). I would be interested to combine a measure like this with syntactic parsers that might allow me to filter out nouns and focus only on any patterns of non-nouns’ TF-IDF-based distinctiveness in the future.</p>
+<p><strong>• Are there documents whose “distinctiveness” seems driven by noise or formatting rather than content?</strong></p>
+<p>Yes. The documents whose “distinctiveness” are most driven by noise or formatting are those which include special characters like underscores, which originally represented letters that I could not decipher in my transcription of the diaries; for example, 4 of the top 10 sentiment words by TF-IDF of text5 (January 3, 1955) include such underscores, likely inflating their “uniqueness” measured across the corpus, and there are 52 other instances of single-character “words” (mostly special characters) being reflected across the entries.</p>
+</section>
+</section>
+<section id="investigating-tf-idf-sentiment-across-time" class="level2">
+<h2 class="anchored" data-anchor-id="investigating-tf-idf-sentiment-across-time">Investigating TF-IDF Sentiment Across Time</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading the Bing sentiment dictionary</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>bing <span class="ot">&lt;-</span> <span class="fu">get_sentiments</span>(<span class="st">"bing"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>net_weekly <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, sentiment_tf_idf, <span class="sc">-</span>sentiment_tf_idf)) <span class="sc">|&gt;</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id) <span class="sc">|&gt;</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">net_tf_idf_sentiment =</span> <span class="fu">sum</span>(sentiment_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(week_day) <span class="sc">|&gt;</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_net_tf_idf_sentiment =</span> <span class="fu">mean</span>(net_tf_idf_sentiment), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>net_monthly <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, sentiment_tf_idf, <span class="sc">-</span>sentiment_tf_idf)) <span class="sc">|&gt;</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id) <span class="sc">|&gt;</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">net_tf_idf_sentiment =</span> <span class="fu">sum</span>(sentiment_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_net_tf_idf_sentiment =</span> <span class="fu">mean</span>(net_tf_idf_sentiment), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>net_monthly2 <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, sentiment_tf_idf, <span class="sc">-</span>sentiment_tf_idf)) <span class="sc">|&gt;</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id) <span class="sc">|&gt;</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">net_tf_idf_sentiment =</span> <span class="fu">sum</span>(sentiment_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month2) <span class="sc">|&gt;</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_net_tf_idf_sentiment =</span> <span class="fu">mean</span>(net_tf_idf_sentiment), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>total_weekly <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, total_tf_idf, <span class="sc">-</span>total_tf_idf)) <span class="sc">|&gt;</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(week_day, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_total_tf_idf_sentiment =</span> <span class="fu">mean</span>(total_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>total_monthly <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, total_tf_idf, <span class="sc">-</span>total_tf_idf)) <span class="sc">|&gt;</span></span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_total_tf_idf_sentiment =</span> <span class="fu">mean</span>(total_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>total_monthly2 <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, total_tf_idf, <span class="sc">-</span>total_tf_idf)) <span class="sc">|&gt;</span></span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month2, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_total_tf_idf_sentiment =</span> <span class="fu">mean</span>(total_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stripe pattern for net overlay</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">data =</span> total_weekly, <span class="fu">aes</span>(week_day, average_total_tf_idf_sentiment, <span class="at">fill =</span> <span class="fu">fct_rev</span>(<span class="fu">as.factor</span>(sentiment)))) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col_pattern</span>(<span class="at">data =</span> net_weekly, <span class="fu">aes</span>(week_day, average_net_tf_idf_sentiment, <span class="at">fill =</span> <span class="st">"net"</span>), <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">pattern =</span> <span class="st">"stripe"</span>, <span class="at">pattern_fill =</span> <span class="st">"black"</span>, <span class="at">pattern_angle =</span> <span class="dv">45</span>, <span class="at">pattern_density =</span> <span class="fl">0.08</span>, <span class="at">pattern_spacing =</span> <span class="fl">0.03</span>) <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Average Sentiment Word TF-IDF by Day of the Week"</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Negative sentiment words' TF-IDF is plotted as negative (-)"</span>,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Day of the Week"</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Average Sentiment Word TF-IDF"</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Sentiment"</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Positive"</span>, <span class="st">"Negative"</span>, <span class="st">"Net"</span>),</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"lightgreen"</span>, <span class="st">"#FF474C"</span>, <span class="st">"transparent"</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="text-as-data-data-exploration_files/figure-html/net-and-total-tf-idf-overlay-graphs-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave("tf_idf_by_week.png", width = 1356, height = 838, units = "px", dpi = 192)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># TF-IDF sentiment over 24-month period</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">data =</span> total_monthly2, <span class="fu">aes</span>(month2, average_total_tf_idf_sentiment, <span class="at">fill =</span> <span class="fu">fct_rev</span>(<span class="fu">as.factor</span>(sentiment)))) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col_pattern</span>(<span class="at">data =</span> net_monthly2, <span class="fu">aes</span>(month2, average_net_tf_idf_sentiment, <span class="at">fill =</span> <span class="st">"net"</span>), <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">pattern =</span> <span class="st">"stripe"</span>, <span class="at">pattern_fill =</span> <span class="st">"black"</span>, <span class="at">pattern_angle =</span> <span class="dv">45</span>, <span class="at">pattern_density =</span> <span class="fl">0.08</span>, <span class="at">pattern_spacing =</span> <span class="fl">0.03</span>) <span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">12.5</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.5</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Average Sentiment Word TF-IDF by Month, 1954-1956"</span>,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Negative sentiment words' TF-IDF is plotted as negative (-)"</span>,</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Month"</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Average Sentiment Word TF-IDF"</span>,</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Sentiment"</span>,</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Positive"</span>, <span class="st">"Negative"</span>, <span class="st">"Net"</span>),</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"lightgreen"</span>, <span class="st">"#FF474C"</span>, <span class="st">"transparent"</span>)</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_x_continuous</span>(</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Dec."</span>, <span class="st">"Jan."</span>, <span class="st">"Feb."</span>, <span class="st">"Mar."</span>, <span class="st">"Apr."</span>, <span class="st">"May"</span>, <span class="st">"June"</span>, <span class="st">"July"</span>, <span class="st">"Aug."</span>, <span class="st">"Sept."</span>, <span class="st">"Oct."</span>, <span class="st">"Nov."</span>, <span class="st">"Dec."</span>, <span class="st">"Jan."</span>, <span class="st">"Feb."</span>, <span class="st">"Mar."</span>, <span class="st">"Apr."</span>, <span class="st">"May"</span>, <span class="st">"June"</span>, <span class="st">"July"</span>, <span class="st">"Aug."</span>, <span class="st">"Sept."</span>, <span class="st">"Oct."</span>, <span class="st">"Nov."</span>),</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">14</span>, <span class="dv">15</span>, <span class="dv">16</span>, <span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">19</span>, <span class="dv">20</span>, <span class="dv">21</span>, <span class="dv">22</span>, <span class="dv">23</span>),</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.01</span>))</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">40</span>, <span class="at">hjust =</span> .<span class="dv">75</span>),</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">geom =</span> <span class="st">"text"</span>,</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">3.05</span>,</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">Inf</span>,</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"1955"</span>,</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">1.7</span>,</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="fl">1.5</span>,</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"grey"</span>,</span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a><span class="co">#  annotate(</span></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a><span class="co">#    geom = "text",</span></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a><span class="co">#    x = 3.05,</span></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a><span class="co">#    y = Inf,</span></span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a><span class="co">#    label = "'54",</span></span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a><span class="co">#    hjust = 3.43,</span></span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a><span class="co">#    vjust = 1.5,</span></span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a><span class="co">#    color = "grey",</span></span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a><span class="co">#    fontface = "bold"</span></span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a><span class="co">#  ) +</span></span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">geom =</span> <span class="st">"text"</span>,</span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">3.05</span>,</span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">Inf</span>,</span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"1956"</span>,</span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">9.2</span>,</span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="fl">1.5</span>,</span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"grey"</span>,</span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span></span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="text-as-data-data-exploration_files/figure-html/tf-idf-sentiment-by-month-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave("tf_idf_by_month.png", width = 1356, height = 838, units = "px", dpi = 192)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="interpretation-1" class="level4">
+<h4 class="anchored" data-anchor-id="interpretation-1">Interpretation:</h4>
+<p>These supplementary graphs aggregate the TF-IDF score of negative and positive sentiment words across both the days of the week and the various months of my grandfather’s journeys, demonstrating both net and gross sentiment (with negative sentiment graphed as a “negative” TF-IDF score accordingly).</p>
+<p>Among the days of the week, on average, it appears that Sundays were the days of the week for which my grandfather had the highest net positive TF-IDF-weighted sentiment, while Fridays on average had slightly net negative TF-IDF-weighted sentiment, with every other day falling somewhere in between with some degree of net positive TF-IDF-weighted sentiment.</p>
+<p>Among the months of my grandfather’s journey, the transition point between his mandatory military service and his world travels at his discharge in May 1956 is extremely clear: the four months after that point are filled with very high net positive TF-IDF-weighted sentiment, unlike the relatively neutral (and often even net negative) TF-IDF-weighted sentiment expressed in prior months.</p>
+</section>
+</section>
+<section id="calculating-pearson-correlation-between-documents" class="level2">
+<h2 class="anchored" data-anchor-id="calculating-pearson-correlation-between-documents">Calculating Pearson Correlation Between Documents</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>diary_document_corr <span class="ot">&lt;-</span> <span class="fu">textstat_simil</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dfm_trim</span>(diary_dfm_no_stops, <span class="at">min_termfreq =</span> <span class="dv">5</span>), </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"correlation"</span>, </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">margin =</span> <span class="st">"documents"</span>) </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Making a long tibble from the DFM Pearson correlation excluding same-document pairs (e.g., the correlation between text45 and text45) and including only pairs where document1 has a lower document number than document2 to remove duplicates (e.g., keeping the document1 = text374 and document2 = text375 correlation and removing the document1 = text375 and document2 = text374 correlation, because they are identical)</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>diary_document_corr_tibble_long <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(diary_document_corr) <span class="sc">|&gt;</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(correlation)) <span class="sc">|&gt;</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">document1 =</span> <span class="fu">as.numeric</span>(<span class="fu">str_sub</span>(document1, <span class="at">start =</span> <span class="dv">5</span>)),</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">document2 =</span> <span class="fu">as.numeric</span>(<span class="fu">str_sub</span>(document2, <span class="at">start =</span> <span class="dv">5</span>)))</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(diary_document_corr_tibble_long, <span class="at">n =</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 232,221 × 3
+   document1 document2 correlation
+       &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+ 1       374       375       0.976
+ 2       374       648       0.971
+ 3       375       376       0.971
+ 4       374       376       0.970
+ 5       374       377       0.970
+ 6       374       386       0.969
+ 7       374       557       0.969
+ 8       375       386       0.968
+ 9       375       377       0.968
+10       374       637       0.968
+# ℹ 232,211 more rows</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>diary_document_corr_tibble_long <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  document1 document2 correlation
+      &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+1       374       375       0.976
+2       374       648       0.971</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>diary_document_corr_tibble_long <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tail</span>(<span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  document1 document2 correlation
+      &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+1       187       307       0.415
+2        86       307       0.397</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#The mean correlation between entries is 0.871, the median correlation between entries is 0.883, and the middle 50% of all entries have correlations ranging from 0.849 to 0.908.  </span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(diary_document_corr_tibble_long<span class="sc">$</span>correlation)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8715594</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(diary_document_corr_tibble_long<span class="sc">$</span>correlation)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       0%       25%       50%       75%      100% 
+0.3969486 0.8491960 0.8832032 0.9081537 0.9764734 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a heat map for the Pearson correlations</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>diary_document_corr_tibble_long <span class="sc">|&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> document1, <span class="at">y =</span> document2, <span class="at">fill =</span> correlation)) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">low =</span> <span class="st">"blue"</span>,</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">high =</span> <span class="st">"red"</span>,</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">mid =</span> <span class="st">"yellow"</span>,</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">midpoint =</span> <span class="fl">0.68</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Pearson Correlation Between Documents"</span>,</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Excluding Identical Correlations &amp; Duplicate Document Pairs"</span>,</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Document 1 Number"</span>,</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Document 2 Number"</span>,</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Correlation"</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>() </span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>    ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="text-as-data-data-exploration_files/figure-html/pearson-correlation-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave("heatmap_pearson.png")</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Modeling to determine whether a larger difference in days between entries is correlated with a smaller Pearson correlation between documents: Seems not to be the case, and in fact rather that documents with some of the highest date of writing differences (in the 500-600 day range) have slightly higher correlations on average. </span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>diary_document_corr_tibble_long <span class="sc">|&gt;</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">daydiff =</span> document2 <span class="sc">-</span> document1) <span class="sc">|&gt;</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(daydiff, correlation)) <span class="sc">+</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>() <span class="sc">+</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Pearson Correlation over Increasing Differences in Document Date"</span>,</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Pearson Correlation"</span>,</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Difference in Document Date (Days)"</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="fl">0.39</span>, <span class="fl">0.98</span>)) <span class="co"># These are the min. and max. correlations</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="text-as-data-data-exploration_files/figure-html/pearson-correlation-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="interpretation-2" class="level4">
+<h4 class="anchored" data-anchor-id="interpretation-2">Interpretation:</h4>
+<p>The two most similar document pairs are Text 374 (January 7, 1956) &amp; Text 375 (January 8, 1956) with a Pearson correlation of <strong>0.9764734</strong> and Text 374 (January 7, 1956) &amp; Text 648 (October 7, 1956) with a Pearson correlation of <strong>0.9714377</strong>.</p>
+<p>The two most different document pairs are Text 86 (March 25, 1955) &amp; Text 307 (November 1, 1955) with a Pearson correlation of <strong>0.3969486</strong> and Text 187 (July 4, 1955) &amp; Text 307 (November 1, 1955) with a Pearson correlation of <strong>0.4154998</strong>.</p>
+<p><strong>What questions would you ask from this corpus after seeing the patterns of similarity/differences that you see here? Explain your answer.</strong></p>
+<p>The Pearson correlation is very high between almost every entry of the diary, which is not surprising, as there has been no indication that anyone but my (25- to 27-year-old) grandfather wrote them. I am slightly surprised at the consistency of the correlation being sustained across dates, as is illustrated by the <code>correlation</code> v. <code>diffdate</code> trend line above; I would have expected my grandfather’s vocabulary and structural choices to have evolved more with time, such that temporally separated entries would be less consistent with each other than roughly contemporaneous ones are.</p>
+<p>One question that I would ask from the corpus after seeing the patterns above might be something that Professor Giugni and I discussed when I first proposed using these entries as separate documents: when my grandfather actually wrote each day’s entry. For example, if he mostly wrote entries in January 1956 (around Texts 374, 375, 376, 377, etc.) on the day they described, a handful of days afterwards, or in a large batch at once - one of which seems likely, because he wrote his January 1956 entries back to back in a separate journal that month which lacked explicit space for each day - that might help explain the high correlation between those days; on the other hand, highly correlated entries that are greatly separated in time might suggest that he filled in the earlier entry while writing the later entry (or did both at a third, different time). To this end, I am especially interested in further investigating the visible high-correlation band between texts ~370 and ~400, which seem relatively highly correlated with most other entries and roughly represent the month with the aforementioned abnormal separate-journal situation.</p>
+<p>Furthermore, the heat map in particular shows what appear to be fairly consistent lines across the entry pairs, suggesting that, for example, an entry that is relatively lowly correlated with another entry is likely to have a similar relatively low correlation with the other entries in the diary. I would guess that this is a natural byproduct of most entries being relatively highly correlated with each other, but I would be curious to investigate some of the low-correlation entries in question to determine what makes them relatively unique. My best guess, from examining entries 86 and 187, is that it has to do with their length (both are relatively short), but I am not entirely sure.</p>
+</section>
+</section>
+<section id="measuring-syntactic-complexity" class="level2">
+<h2 class="anchored" data-anchor-id="measuring-syntactic-complexity">Measuring Syntactic Complexity</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Getting the udpipe model for modern English</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>model_info <span class="ot">&lt;-</span> <span class="fu">udpipe_download_model</span>(<span class="at">language =</span> <span class="st">"english-ewt"</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>ud_model <span class="ot">&lt;-</span> <span class="fu">udpipe_load_model</span>(model_info<span class="sc">$</span>file_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-page-layout="full">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotating the two entries I care about for this example using udpipe; I am using entries 374 and 375 because the low-Pearson-correlation entries described above are short in length and thus appear atypical/possibly susceptible to low sentence counts across which these measures are averaged.</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>diary_374_375_anno <span class="ot">&lt;-</span> diary_tibble_clean <span class="sc">|&gt;</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(text_id <span class="sc">==</span> <span class="dv">375</span> <span class="sc">|</span> text_id <span class="sc">==</span> <span class="dv">374</span>) <span class="sc">|&gt;</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">anno =</span> <span class="fu">map2</span>(text_body, text_id, <span class="sc">~</span> <span class="fu">udpipe_annotate</span>(ud_model, <span class="at">x =</span> .x, <span class="at">doc_id =</span> .y) <span class="sc">|&gt;</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">as.data.frame</span>())</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(anno) <span class="sc">|&gt;</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(anno) <span class="sc">|&gt;</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">document =</span> doc_id) <span class="sc">|&gt;</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    document,</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>    paragraph_id,</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>    sentence_id,</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>    token_id,</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>    token,</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    lemma,</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>    upos,</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>    feats,</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>    head_token_id,</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>    dep_rel</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating syntactic structures from the annotated tibble</span></span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>diary_374_375_syntax <span class="ot">&lt;-</span> diary_374_375_anno <span class="sc">|&gt;</span></span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">is_word =</span> upos <span class="sc">!=</span> <span class="st">"PUNCT"</span>,</span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">is_clause =</span> (upos <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"VERB"</span>, <span class="st">"AUX"</span>)) <span class="sc">&amp;</span> <span class="fu">str_detect</span>(<span class="fu">coalesce</span>(feats, <span class="st">""</span>), <span class="st">"VerbForm=Fin"</span>),</span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">is_dep_clause =</span> dep_rel <span class="sc">%in%</span> <span class="fu">c</span>(</span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>      <span class="st">"advcl"</span>,</span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>      <span class="st">"ccomp"</span>,</span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>      <span class="st">"xcomp"</span>,</span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>      <span class="st">"acl"</span>,</span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>      <span class="st">"acl:relcl"</span></span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">is_coord =</span> dep_rel <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"conj"</span>, <span class="st">"cc"</span>),</span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">is_complex_nominal =</span> dep_rel <span class="sc">%in%</span> <span class="fu">c</span>(</span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>      <span class="st">"amod"</span>,</span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>      <span class="st">"nmod"</span>,</span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>      <span class="st">"compound"</span>,</span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>      <span class="st">"appos"</span></span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Turning syntactic structures into syntactic complexity measures</span></span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Creating counts of words, clauses, dependent clauses, coordinating conjunctions, and complex nominals per sentence</span></span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a>diary_374_375_sentence <span class="ot">&lt;-</span> diary_374_375_syntax <span class="sc">|&gt;</span></span>
+<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(document, sentence_id) <span class="sc">|&gt;</span></span>
+<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">words_per_s =</span> <span class="fu">sum</span>(is_word),</span>
+<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">clauses_per_s =</span> <span class="fu">sum</span>(is_clause),</span>
+<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">dep_clauses_per_s =</span> <span class="fu">sum</span>(is_dep_clause),</span>
+<span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">coord_per_s =</span> <span class="fu">sum</span>(is_coord),</span>
+<span id="cb34-56"><a href="#cb34-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">complex_nom_per_s =</span> <span class="fu">sum</span>(is_complex_nominal),</span>
+<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-60"><a href="#cb34-60" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Finding the mean number of the desired complexity markers per sentence and/or clause</span></span>
+<span id="cb34-61"><a href="#cb34-61" aria-hidden="true" tabindex="-1"></a>diary_374_375_complexity <span class="ot">&lt;-</span> diary_374_375_sentence <span class="sc">|&gt;</span></span>
+<span id="cb34-62"><a href="#cb34-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(document) <span class="sc">|&gt;</span></span>
+<span id="cb34-63"><a href="#cb34-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb34-64"><a href="#cb34-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_words_per_s =</span> <span class="fu">mean</span>(words_per_s),</span>
+<span id="cb34-65"><a href="#cb34-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_clauses_per_s =</span> <span class="fu">mean</span>(clauses_per_s),</span>
+<span id="cb34-66"><a href="#cb34-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_dc_per_c =</span> (<span class="fu">sum</span>(dep_clauses_per_s) <span class="sc">/</span> <span class="fu">sum</span>(clauses_per_s)),</span>
+<span id="cb34-67"><a href="#cb34-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_dc_per_s =</span> <span class="fu">mean</span>(dep_clauses_per_s),</span>
+<span id="cb34-68"><a href="#cb34-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_coord_per_c =</span> (<span class="fu">sum</span>(coord_per_s) <span class="sc">/</span> <span class="fu">sum</span>(clauses_per_s)),</span>
+<span id="cb34-69"><a href="#cb34-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_coord_per_s =</span> <span class="fu">mean</span>(coord_per_s),</span>
+<span id="cb34-70"><a href="#cb34-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_compnom_per_c =</span> (<span class="fu">sum</span>(complex_nom_per_s) <span class="sc">/</span> <span class="fu">sum</span>(clauses_per_s)),</span>
+<span id="cb34-71"><a href="#cb34-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_compnom_per_s =</span> <span class="fu">mean</span>(complex_nom_per_s)</span>
+<span id="cb34-72"><a href="#cb34-72" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb34-73"><a href="#cb34-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-74"><a href="#cb34-74" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(diary_374_375_complexity)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 9
+  document mean_words_per_s mean_clauses_per_s mean_dc_per_c mean_dc_per_s
+  &lt;chr&gt;               &lt;dbl&gt;              &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;
+1 374                  16.7               1.65         0.442         0.731
+2 375                  18.9               2.35         0.537         1.26 
+# ℹ 4 more variables: mean_coord_per_c &lt;dbl&gt;, mean_coord_per_s &lt;dbl&gt;,
+#   mean_compnom_per_c &lt;dbl&gt;, mean_compnom_per_s &lt;dbl&gt;</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting syntactic complexity measures</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>diary_374_375_complexity <span class="sc">|&gt;</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>document, <span class="at">names_to =</span> <span class="st">"Measure"</span>, <span class="at">values_to =</span> <span class="st">"Value"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Category =</span> <span class="fu">case_when</span>(</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    Measure <span class="sc">==</span> <span class="st">"mean_words_per_s"</span> <span class="sc">~</span> <span class="st">"Sentence Length"</span>,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    Measure <span class="sc">==</span> <span class="st">"mean_clauses_per_s"</span> <span class="sc">~</span> <span class="st">"Clausal Density"</span>,</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    Measure <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"mean_dc_per_c"</span>, <span class="st">"mean_dc_per_s"</span>) <span class="sc">~</span> <span class="st">"Subordination"</span>,</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>    Measure <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"mean_coord_per_c"</span>, <span class="st">"mean_coord_per_s"</span>) <span class="sc">~</span> <span class="st">"Coordination"</span>,</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    Measure <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"mean_compnom_per_c"</span>, <span class="st">"mean_compnom_per_s"</span>) <span class="sc">~</span> <span class="st">"Phrasal Complexity"</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(Measure, Value, <span class="at">fill =</span> document)) <span class="sc">+</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Category, <span class="at">scales =</span> <span class="st">"free"</span>, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Syntactic Complexity: Complete Profile"</span>,</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Comparing multiple dimensions of syntactic complexity"</span>,</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Value"</span>,</span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Entry #"</span></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Accent"</span>) <span class="sc">+</span></span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"top"</span></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="text-as-data-data-exploration_files/figure-html/syntactic-complexity-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="interpretation-3" class="level4">
+<h4 class="anchored" data-anchor-id="interpretation-3">Interpretation:</h4>
+<p><strong>• How do the two texts differ in syntactic complexity?</strong></p>
+<p>These two entries in the diary show broadly similar profiles: the only measure of complexity for which they differ by more than even a single unit being measured is in their average words per sentence (16.65 in Entry 374 versus 18.89 in Entry 375). Other small differences between the entries include Entry 375’s on average slightly higher clause per sentence (2.34 vs.&nbsp;1.65) and dependent clause per sentence (1.26 vs.&nbsp;0.73) counts and Entry 374’s on average slightly higher complex nominal per clause (1.53 vs.&nbsp;1.06) and coordinating conjunction per clause (1.53 vs.&nbsp;1.06).</p>
+<p>For example, entry 375 has four sentences with higher clause counts than any sentence in Entry 374 (which has no sentences with more than 3 identified clauses):</p>
+<ul>
+<li><p>8 clauses identified by <code>udpipe</code>: “<strong>Near</strong> the docks <strong>are</strong> poor houses and equally <strong>destitute</strong> men walk, lie, <strong>bathe</strong>, <strong>sit</strong>, eat, and <strong>exist</strong> in the streets (I <strong>would</strong> venture that one <strong>sees</strong> 90-95% males on the streets, the women supposedly being at home)”</p></li>
+<li><p>5 clauses identified by <code>udpipe</code>: “As it <strong>turned</strong> out, the Pass and Review <strong>was</strong> finished by the time I <strong>got</strong> there, but I <strong>did</strong> see the latter half which <strong>consisted</strong> of a presentation of medals to outstanding Calcutta policemen.”</p></li>
+<li><p>5 clauses identified by <code>udpipe</code>: “I <strong>said</strong> that I <strong>disagreed</strong>, and <strong>felt</strong> Capitalism or Socialism <strong>would</strong> accomplish the same thing, and one <strong>would</strong> not lose his freedoms, such as speech, press, etc.”</p></li>
+<li><p>4 clauses identified by <code>udpipe</code>: “He <strong>is</strong> not married – <strong>feels</strong> a woman <strong>would</strong> want to tie him down, and know always where he <strong>was</strong> going.”</p></li>
+</ul>
+<p>These four sentences alone account for nearly half (~0.3 of 0.69) of the difference in the mean number of clauses per sentence that exists between the two entries. By comparison, here is one of the clausal densest phrases in Entry 374, with 3 clauses identified by <code>udpipe</code>:</p>
+<ul>
+<li>“Up at 4:45 AM, <strong>packed</strong> my belongings, <strong>ate</strong> breakfast, checked in with the Major, and <strong>boarded</strong> the bus for the airport.”</li>
+</ul>
+<p>Examining these examples partly makes me question the accuracy of the way in which we are using <code>udpipe</code> results to determine what constitutes a clause; in the ‘8-clause’ sentence above, for example, I see no reason for which “bathe,” “sit,” and “exist” should be treated as separate clause markers but not “walk,” “lie,” or “eat.”</p>
+<p><strong>• Do these differences align with or complicate your earlier lexical findings?</strong></p>
+<p>These differences (or, really, the general lack thereof) align with my earlier lexical findings indicating strong similarity between these two entries. I don’t think that the slight variation in a few of the syntactic metrics I measured suggests anything that complicates my lexical findings.</p>
+<p><strong>• What kinds of rhetorical or stylistic practices might these syntactic patterns reflect?</strong></p>
+<p>While the syntactic complexity is very similar between the entries I examined here, it is still interesting to consider what small deviations between sentences across entries might entail. As the phrase above from Entry 374 suggests, for example, I think that many of the sentences with the highest clausal density might be ones in which my grandfather is briefly describing a sequence of multiple different actions he took, perhaps suggesting he lacked the time or desire to elaborate on each individual action in that sequence as he reflected upon them. Similarly, the fact that Entry 375 has a slightly higher concentration of dependent clauses might suggest that my grandfather was more deliberate and measured in his construction of each sentence in the entry, again pointing to the possibility that he had more time (whether granted by his external circumstances or simply by nature of his variable mental bandwidth) to produce a slightly more ‘composed’ entry than he did for the previous day.</p>
+</section>
+</section>
+<section id="synthesis" class="level2">
+<h2 class="anchored" data-anchor-id="synthesis">Synthesis</h2>
+<p>My grandfather’s diary entries reflect a generally consistent lexicon across the two years of his travels, but the sentiment measures suggest a substantial change in emotional vocabulary, becoming more positive after his discharge from military service in May 1956. This change is apparent in the TF-IDF-weighted sentiment aggregation I completed in the first section of this exploration, while the high lexical consistency between entries is particularly illustrated by the heat map of Pearson correlations between documents; my analysis of syntactic complexity revealed similar uniformity, but that was expected given that the documents I chose for it were the most lexically similar. After conducting these preliminary comparisons of lexical similarity, syntactic complexity, and TF-IDF-weighted sentiment across entries, I hypothesize that <strong>changes in my grandfather’s emotional (and other thematic linguistic) expression throughout the diary may be more strongly associated with shifts in his life circumstances than with changes in his underlying writing style,</strong> which tentatively appears to be generally consistent. This hypothesis will be something I hope to explore further in my final project along with any other measurements of linguistic change over time that the Pearson correlation and (very limited) two-document syntactic complexity comparison I did in this exploration did not reveal.</p>
+<p>Of course, the results from this data exploration only represent a snapshot of the trends in my grandfather’s diaristic writings, and there are many uncertainties that remain. For example, my decision to faithfully transcribe my grandfather’s spelling errors, treat each entry as the discrete unit of analysis, and “re-compound” neighboring capital word tokens each impact the calculation of TF-IDF values, Pearson correlations, and syntactic complexity; it is worth investigating whether and to what extent such impact affects my conclusions. Beyond transcription and preprocessing decisions, there are also important limitations inherent in the measures themselves. For example, I used a simple Bing dictionary combined with TF-IDF values to discuss positive and negative sentiment words, but true “net” sentiment might be better captured by dictionaries or other methods that capture sentiments’ intensity and not just their weighted frequency. Further, while Pearson correlations provides a useful measure of lexical similarity, they do not necessarily capture similarity in meaning, rhetorical purpose, or writing style; because the correlations were calculated using a DFM of word frequencies, two entries can be highly correlated even if they discuss entirely different subjects, as long as their distributions of word frequencies are similar, while entries discussing similar subjects may receive relatively low correlations if they differ in length, specific vocabulary, or relative term frequency. The high average correlations I observed across the diary may therefore more truly reflect the persistence of common vocabulary in daily life, diary conventions, or the effects of representing each entry as a vector of word frequencies. Moreover, because I removed stopwords and trimmed infrequent terms before calculating correlations, my results reflect similarity within a particular subset of the vocabulary rather than the entirety of the diary’s language.</p>
+<p>Addressing these pitfalls to develop more robust conclusions will be a key priority of my final analysis. I also hope to expand my syntactic complexity analysis beyond two entries, validate the accuracy of the parser’s annotations, and compare alternative measures of lexical similarity and sentiment (especially length-independent ones like cosine similarity) to determine whether my initial findings hold under different methodological assumptions. Ultimately, I hope that combining these approaches will allow me to distinguish more confidently between changes in what my grandfather wrote about, changes in how he wrote, and changes in how he expressed his feelings about the world around him as I analyze his diaries.</p>
+</section>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section"></h2>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
