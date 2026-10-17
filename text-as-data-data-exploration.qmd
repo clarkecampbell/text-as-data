@@ -4,12 +4,9 @@ author: "Clarke Campbell"
 format: 
   html:
     code-overflow: wrap
+    fig-align: center
 editor: visual
 ---
-
-# Text as Data: Data Exploration
-
-### Clarke Campbell
 
 ### October 14, 2026
 
@@ -60,9 +57,9 @@ cleaned_entry_pieces <- cleaned_entry_pieces[-1]
 
 # Removing the single duplicate entry header (Jan 1, 1956): 
 cleaned_entry_pieces <- cleaned_entry_pieces[-368]
-
-# There are 682 documents in the corpus: one for each day from December 30, 1954 to November 10, 1956.
 ```
+
+There are 682 documents in the corpus: one for each day from December 30, 1954 to November 10, 1956.
 
 ```{r}
 #| label: creating-tibble-for-tidytext
@@ -259,6 +256,7 @@ print(top10_tfidf_tibble, n = 30)
 
 ```{r}
 #| label: top10-tf-idf-terms-word-cloud
+#| fig-align: center
 
 
 # Creating a word cloud of most common high TF-IDF words across documents
@@ -293,7 +291,7 @@ top10_tfidf_tibble |>
 
 **• Do some documents share distinctive vocabulary?**
 
-Yes, many of the entries share distinctive vocabulary terms. The word cloud above illustrates the most common words shared across the top 10 words by TF-IDF of each entry (e.g., "Japanese," "Korean," "India," etc.).
+Yes, many of the entries share distinctive vocabulary terms. The word cloud above illustrates the most common words shared across the top 10 distinctive words (by TF-IDF) of each entry (e.g., "Japanese," "Korean," "India," etc.).
 
 **• Are distinctive terms topical, rhetorical, or technical?**
 
@@ -301,15 +299,17 @@ Practically all of the distinctive words shared across the diary's entries are n
 
 **• Are there documents whose “distinctiveness” seems driven by noise or formatting rather than content?**
 
-Yes. The documents whose "distinctiveness" are most driven by noise or formatting are those which include special characters like underscores, which originally represented letters that I could not decipher in my transcription of the diaries; for example, 4 of the top 10 sentiment words by TF-IDF of text5 (January 3, 1955) include such underscores, likely inflating their "uniqueness" measured across the corpus, and there are 52 other instances of single-character "words" (mostly special characters) being reflected across the entries.
+Yes. The documents whose "distinctiveness" are most driven by noise or formatting are those which include special characters like underscores, which originally represented letters that I could not decipher in my transcription of the diaries; for example, 4 of the top 10 sentiment words by TF-IDF of Entry 5 (January 3, 1955) include such underscores, likely inflating their "uniqueness" measured across the corpus. There are also 52 other instances of single-character "words" (mostly special characters) being reflected across entries' top 10 sentiment words.
 
-## Investigating TF-IDF Sentiment Across Time
+## Investigating Net & Total TF-IDF Sentiment Across Time
 
 ```{r}
 #| label: net-and-total-weekly-monthly-monthly2-sentiment-tf-idf
 
 # Loading the Bing sentiment dictionary
 bing <- get_sentiments("bing")
+
+# Creating data sets grouped by timeframe for analysis
 
 net_weekly <- diary_tfidf_no_stops_tibble |>
   inner_join(bing, by = "word") |>
@@ -333,6 +333,7 @@ net_monthly <- diary_tfidf_no_stops_tibble |>
   group_by(month) |>
   summarize(average_net_tf_idf_sentiment = mean(net_tf_idf_sentiment), .groups = "drop")
 
+# Net monthly2 represents all 24 months, not just per-month averages
 net_monthly2 <- diary_tfidf_no_stops_tibble |>
   inner_join(bing, by = "word") |>
   group_by(doc_id, sentiment) |>
@@ -374,8 +375,9 @@ total_monthly2 <- diary_tfidf_no_stops_tibble |>
 
 ```{r}
 #| label: net-and-total-tf-idf-overlay-graphs
+#| fig-align: center
 
-# Stripe pattern for net overlay
+# Plotting sentiment-word TF-IDF by day of the week with a stripe pattern for net overlay
 ggplot() +
   geom_col(data = total_weekly, aes(week_day, average_total_tf_idf_sentiment, fill = fct_rev(as.factor(sentiment)))) +
   geom_col_pattern(data = net_weekly, aes(week_day, average_net_tf_idf_sentiment, fill = "net"), color = "black", pattern = "stripe", pattern_fill = "black", pattern_angle = 45, pattern_density = 0.08, pattern_spacing = 0.03) +
@@ -398,9 +400,10 @@ ggplot() +
 
 ```{r}
 #| label: tf-idf-sentiment-by-month
+#| fig-align: center
 
 
-# TF-IDF sentiment over 24-month period
+# Plotting TF-IDF sentiment over 24-month period with a stripe pattern for net overlay
 
 ggplot() +
   geom_col(data = total_monthly2, aes(month2, average_total_tf_idf_sentiment, fill = fct_rev(as.factor(sentiment)))) +
@@ -470,6 +473,8 @@ Among the days of the week, on average, it appears that Sundays were the days of
 
 Among the months of my grandfather's journey, the transition point between his mandatory military service and his world travels at his discharge in May 1956 is extremely clear: the four months after that point are filled with very high net positive TF-IDF-weighted sentiment, unlike the relatively neutral (and often even net negative) TF-IDF-weighted sentiment expressed in prior months.
 
+Of course, the TF-IDF weighting of sentiment does not capture the true strength of the sentiment expressed (which is purely binary with a Bing dictionary), so perhaps more investigation through other means could confirm or cast doubt on these tentative findings.
+
 ## Calculating Pearson Correlation Between Documents
 
 ```{r}
@@ -495,11 +500,16 @@ diary_document_corr_tibble_long |>
 diary_document_corr_tibble_long |>
   tail(2)
 
-
-#The mean correlation between entries is 0.871, the median correlation between entries is 0.883, and the middle 50% of all entries have correlations ranging from 0.849 to 0.908.  
 mean(diary_document_corr_tibble_long$correlation)
 quantile(diary_document_corr_tibble_long$correlation)
 
+```
+
+The mean correlation between entries is **0.871**, the median correlation between entries is **0.883**, and the middle 50% of all entries have correlations ranging from **0.849** to **0.908**.
+
+```{r}
+#| label: pearson-corr-2
+#| fig-align: center
 
 # Creating a heat map for the Pearson correlations
 diary_document_corr_tibble_long |>
@@ -511,22 +521,22 @@ diary_document_corr_tibble_long |>
     high = "red",
     mid = "yellow",
     midpoint = 0.68
-    ) +
+  ) +
   labs(
     title = "Pearson Correlation Between Documents",
     subtitle = "Excluding Identical Correlations & Duplicate Document Pairs",
     x = "Document 1 Number",
     y = "Document 2 Number",
     fill = "Correlation"
-    ) +
+  ) +
   theme_minimal() +
   theme(
     panel.grid = element_blank() 
-    ) 
+  ) 
 
 #ggsave("heatmap_pearson.png")
 
-# Modeling to determine whether a larger difference in days between entries is correlated with a smaller Pearson correlation between documents: Seems not to be the case, and in fact rather that documents with some of the highest date of writing differences (in the 500-600 day range) have slightly higher correlations on average. 
+# Modeling to determine whether a larger difference in days between entries is correlated with a smaller Pearson correlation between documents. Seems not to be the case, and in fact rather that documents with some of the highest date of writing differences (in the 500-600 day range) have slightly higher correlations on average. 
 diary_document_corr_tibble_long |>
   mutate(daydiff = document2 - document1) |>
   ggplot(aes(daydiff, correlation)) +
@@ -551,7 +561,7 @@ The two most different document pairs are Text 86 (March 25, 1955) & Text 307 (N
 
 The Pearson correlation is very high between almost every entry of the diary, which is not surprising, as there has been no indication that anyone but my (25- to 27-year-old) grandfather wrote them. I am slightly surprised at the consistency of the correlation being sustained across dates, as is illustrated by the `correlation` v. `diffdate` trend line above; I would have expected my grandfather's vocabulary and structural choices to have evolved more with time, such that temporally separated entries would be less consistent with each other than roughly contemporaneous ones are.
 
-One question that I would ask from the corpus after seeing the patterns above might be something that Professor Giugni and I discussed when I first proposed using these entries as separate documents: when my grandfather actually wrote each day's entry. For example, if he mostly wrote entries in January 1956 (around Texts 374, 375, 376, 377, etc.) on the day they described, a handful of days afterwards, or in a large batch at once - one of which seems likely, because he wrote his January 1956 entries back to back in a separate journal that month which lacked explicit space for each day - that might help explain the high correlation between those days; on the other hand, highly correlated entries that are greatly separated in time might suggest that he filled in the earlier entry while writing the later entry (or did both at a third, different time). To this end, I am especially interested in further investigating the visible high-correlation band between texts \~370 and \~400, which seem relatively highly correlated with most other entries and roughly represent the month with the aforementioned abnormal separate-journal situation.
+One question that I would ask from the corpus after seeing the patterns above might be something that Professor Giugni and I discussed when I first proposed using these entries as separate documents: when my grandfather actually wrote each day's entry. For example, if he mostly wrote entries in January 1956 (around Texts 374, 375, 376, 377, etc.) on the day they described, a handful of days afterwards, or in a large batch at once - one of which seems likely, because he wrote his January 1956 entries back to back in a separate journal that month which lacked explicit space for each day - that might help explain the high correlation between those days. On the other hand, highly correlated entries that are greatly separated in time might suggest that he filled in the earlier entry while writing the later entry (or did both at a third, different time). To this end, I am especially interested in further investigating the visible high-correlation band between texts \~370 and \~400, which seem relatively highly correlated with most other entries and roughly represent the month with the aforementioned abnormal separate-journal situation.
 
 Furthermore, the heat map in particular shows what appear to be fairly consistent lines across the entry pairs, suggesting that, for example, an entry that is relatively lowly correlated with another entry is likely to have a similar relatively low correlation with the other entries in the diary. I would guess that this is a natural byproduct of most entries being relatively highly correlated with each other, but I would be curious to investigate some of the low-correlation entries in question to determine what makes them relatively unique. My best guess, from examining entries 86 and 187, is that it has to do with their length (both are relatively short), but I am not entirely sure.
 
@@ -569,8 +579,9 @@ ud_model <- udpipe_load_model(model_info$file_model)
 ```{r}
 #| label: syntactic-complexity
 #| page-layout: full
+#| fig-align: center
 
-# Annotating the two entries I care about for this example using udpipe; I am using entries 374 and 375 because the low-Pearson-correlation entries described above are short in length and thus appear atypical/possibly susceptible to low sentence counts across which these measures are averaged.
+# Annotating the two entries I care about for this example using udpipe; I am using entries 374 and 375 because the low-Pearson-correlation entries that I determined and mentioned above are short in length and thus appear atypical/possibly susceptible to abnormally low sentence counts, across which these measures are averaged.
 diary_374_375_anno <- diary_tibble_clean |>
   filter(text_id == 375 | text_id == 374) |>
   mutate(
@@ -705,11 +716,11 @@ While the syntactic complexity is very similar between the entries I examined he
 
 ## Synthesis
 
-My grandfather’s diary entries reflect a generally consistent lexicon across the two years of his travels, but the sentiment measures suggest a substantial change in emotional vocabulary, becoming more positive after his discharge from military service in May 1956. This change is apparent in the TF-IDF-weighted sentiment aggregation I completed in the first section of this exploration, while the high lexical consistency between entries is particularly illustrated by the heat map of Pearson correlations between documents; my analysis of syntactic complexity revealed similar uniformity, but that was expected given that the documents I chose for it were the most lexically similar. After conducting these preliminary comparisons of lexical similarity, syntactic complexity, and TF-IDF-weighted sentiment across entries, I hypothesize that **changes in my grandfather's emotional (and other thematic linguistic) expression throughout the diary may be more strongly associated with shifts in his life circumstances than with changes in his underlying writing style,** which tentatively appears to be generally consistent. This hypothesis will be something I hope to explore further in my final project along with any other measurements of linguistic change over time that the Pearson correlation and (very limited) two-document syntactic complexity comparison I did in this exploration did not reveal.
+My grandfather’s diary entries reflect a generally consistent lexicon across the two years of his travels, but the sentiment measures suggest a substantial change in emotional vocabulary, becoming more positive after his discharge from military service in May 1956. This change is apparent in the TF-IDF-weighted sentiment aggregation I completed in the first section of this exploration, while the high lexical consistency between entries is particularly illustrated by the heat map of Pearson correlations between documents; my analysis of syntactic complexity revealed similar uniformity, but that was expected given that the documents I chose for it were the most lexically similar. After conducting these preliminary comparisons of lexical similarity, syntactic complexity, and TF-IDF-weighted sentiment across entries, I hypothesize that **changes in my grandfather's emotional (and other linguistic) expression throughout the diary may be more strongly associated with shifts in his life circumstances than with changes in his underlying writing style,** which tentatively appears to be generally consistent. This hypothesis will be something I hope to explore further in my final project along with any other measurements of linguistic change over time that the Pearson correlation and (very limited) two-document syntactic complexity comparison I did in this exploration did not reveal.
 
 Of course, the results from this data exploration only represent a snapshot of the trends in my grandfather's diaristic writings, and there are many uncertainties that remain. For example, my decision to faithfully transcribe my grandfather's spelling errors, treat each entry as the discrete unit of analysis, and "re-compound" neighboring capital word tokens each impact the calculation of TF-IDF values, Pearson correlations, and syntactic complexity; it is worth investigating whether and to what extent such impact affects my conclusions. Beyond transcription and preprocessing decisions, there are also important limitations inherent in the measures themselves. For example, I used a simple Bing dictionary combined with TF-IDF values to discuss positive and negative sentiment words, but true "net" sentiment might be better captured by dictionaries or other methods that capture sentiments' intensity and not just their weighted frequency. Further, while Pearson correlations provides a useful measure of lexical similarity, they do not necessarily capture similarity in meaning, rhetorical purpose, or writing style; because the correlations were calculated using a DFM of word frequencies, two entries can be highly correlated even if they discuss entirely different subjects, as long as their distributions of word frequencies are similar, while entries discussing similar subjects may receive relatively low correlations if they differ in length, specific vocabulary, or relative term frequency. The high average correlations I observed across the diary may therefore more truly reflect the persistence of common vocabulary in daily life, diary conventions, or the effects of representing each entry as a vector of word frequencies. Moreover, because I removed stopwords and trimmed infrequent terms before calculating correlations, my results reflect similarity within a particular subset of the vocabulary rather than the entirety of the diary's language.
 
-Addressing these pitfalls to develop more robust conclusions will be a key priority of my final analysis. I also hope to expand my syntactic complexity analysis beyond two entries, validate the accuracy of the parser's annotations, and compare alternative measures of lexical similarity and sentiment (especially length-independent ones like cosine similarity) to determine whether my initial findings hold under different methodological assumptions. Ultimately, I hope that combining these approaches will allow me to distinguish more confidently between changes in what my grandfather wrote about, changes in how he wrote, and changes in how he expressed his feelings about the world around him as I analyze his diaries.
+Addressing these limitations to develop more robust conclusions will be a key priority of my final analysis. I also hope to expand my syntactic complexity analysis beyond two entries, validate the accuracy of the `udpipe` parser's annotations, and compare alternative measures of lexical similarity and sentiment (especially length-independent ones like cosine similarity) to determine whether my initial findings hold under different methodological assumptions. Ultimately, I hope that combining these approaches will allow me to distinguish more confidently between changes in what my grandfather wrote about, changes in how he wrote, and changes in how he expressed his feelings about the world around him as I analyze his diaries.
 
 ## 
 

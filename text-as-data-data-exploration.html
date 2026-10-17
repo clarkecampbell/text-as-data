@@ -108,11 +108,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="text-as-data-data-exploration" class="level1">
-<h1>Text as Data: Data Exploration</h1>
-<section id="clarke-campbell" class="level3">
-<h3 class="anchored" data-anchor-id="clarke-campbell">Clarke Campbell</h3>
-</section>
 <section id="october-14-2026" class="level3">
 <h3 class="anchored" data-anchor-id="october-14-2026">October 14, 2026</h3>
 </section>
@@ -157,10 +152,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>cleaned_entry_pieces <span class="ot">&lt;-</span> cleaned_entry_pieces[<span class="sc">-</span><span class="dv">1</span>]</span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Removing the single duplicate entry header (Jan 1, 1956): </span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>cleaned_entry_pieces <span class="ot">&lt;-</span> cleaned_entry_pieces[<span class="sc">-</span><span class="dv">368</span>]</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co"># There are 682 documents in the corpus: one for each day from December 30, 1954 to November 10, 1956.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>cleaned_entry_pieces <span class="ot">&lt;-</span> cleaned_entry_pieces[<span class="sc">-</span><span class="dv">368</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>There are 682 documents in the corpus: one for each day from December 30, 1954 to November 10, 1956.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Combining into a tibble for tidytext workflows</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>diary_tibble_raw <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
@@ -410,7 +404,7 @@ Computation for large collocations may take long time</code></pre>
 # ℹ 6,790 more rows</code></pre>
 </div>
 </div>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a word cloud of most common high TF-IDF words across documents</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
@@ -426,9 +420,9 @@ Computation for large collocations may take long time</code></pre>
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
 <span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="text-as-data-data-exploration_files/figure-html/top10-tf-idf-terms-word-cloud-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="text-as-data-data-exploration_files/figure-html/top10-tf-idf-terms-word-cloud-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -453,81 +447,84 @@ Computation for large collocations may take long time</code></pre>
 <section id="interpretation" class="level4">
 <h4 class="anchored" data-anchor-id="interpretation">Interpretation:</h4>
 <p><strong>• Do some documents share distinctive vocabulary?</strong></p>
-<p>Yes, many of the entries share distinctive vocabulary terms. The word cloud above illustrates the most common words shared across the top 10 words by TF-IDF of each entry (e.g., “Japanese,” “Korean,” “India,” etc.).</p>
+<p>Yes, many of the entries share distinctive vocabulary terms. The word cloud above illustrates the most common words shared across the top 10 distinctive words (by TF-IDF) of each entry (e.g., “Japanese,” “Korean,” “India,” etc.).</p>
 <p><strong>• Are distinctive terms topical, rhetorical, or technical?</strong></p>
 <p>Practically all of the distinctive words shared across the diary’s entries are nouns, many of which refer to the nationalities or places that my grandfather described (e.g., Japan, Korea, India, Okinawa, Istanbul, Israel, Hong Kong, Naha) or the types of technically-related objects and concepts he encountered in his work as an Army contract estimator (e.g., contract estimates, cars, buildings, facilities, contractors, etc.). I would be interested to combine a measure like this with syntactic parsers that might allow me to filter out nouns and focus only on any patterns of non-nouns’ TF-IDF-based distinctiveness in the future.</p>
 <p><strong>• Are there documents whose “distinctiveness” seems driven by noise or formatting rather than content?</strong></p>
-<p>Yes. The documents whose “distinctiveness” are most driven by noise or formatting are those which include special characters like underscores, which originally represented letters that I could not decipher in my transcription of the diaries; for example, 4 of the top 10 sentiment words by TF-IDF of text5 (January 3, 1955) include such underscores, likely inflating their “uniqueness” measured across the corpus, and there are 52 other instances of single-character “words” (mostly special characters) being reflected across the entries.</p>
+<p>Yes. The documents whose “distinctiveness” are most driven by noise or formatting are those which include special characters like underscores, which originally represented letters that I could not decipher in my transcription of the diaries; for example, 4 of the top 10 sentiment words by TF-IDF of Entry 5 (January 3, 1955) include such underscores, likely inflating their “uniqueness” measured across the corpus. There are also 52 other instances of single-character “words” (mostly special characters) being reflected across entries’ top 10 sentiment words.</p>
 </section>
 </section>
-<section id="investigating-tf-idf-sentiment-across-time" class="level2">
-<h2 class="anchored" data-anchor-id="investigating-tf-idf-sentiment-across-time">Investigating TF-IDF Sentiment Across Time</h2>
+<section id="investigating-net-total-tf-idf-sentiment-across-time" class="level2">
+<h2 class="anchored" data-anchor-id="investigating-net-total-tf-idf-sentiment-across-time">Investigating Net &amp; Total TF-IDF Sentiment Across Time</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading the Bing sentiment dictionary</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>bing <span class="ot">&lt;-</span> <span class="fu">get_sentiments</span>(<span class="st">"bing"</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>net_weekly <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, sentiment_tf_idf, <span class="sc">-</span>sentiment_tf_idf)) <span class="sc">|&gt;</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id) <span class="sc">|&gt;</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">net_tf_idf_sentiment =</span> <span class="fu">sum</span>(sentiment_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(week_day) <span class="sc">|&gt;</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_net_tf_idf_sentiment =</span> <span class="fu">mean</span>(net_tf_idf_sentiment), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>net_monthly <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, sentiment_tf_idf, <span class="sc">-</span>sentiment_tf_idf)) <span class="sc">|&gt;</span></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id) <span class="sc">|&gt;</span></span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">net_tf_idf_sentiment =</span> <span class="fu">sum</span>(sentiment_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span></span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_net_tf_idf_sentiment =</span> <span class="fu">mean</span>(net_tf_idf_sentiment), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>net_monthly2 <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, sentiment_tf_idf, <span class="sc">-</span>sentiment_tf_idf)) <span class="sc">|&gt;</span></span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id) <span class="sc">|&gt;</span></span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">net_tf_idf_sentiment =</span> <span class="fu">sum</span>(sentiment_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month2) <span class="sc">|&gt;</span></span>
-<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_net_tf_idf_sentiment =</span> <span class="fu">mean</span>(net_tf_idf_sentiment), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>total_weekly <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
-<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
-<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, total_tf_idf, <span class="sc">-</span>total_tf_idf)) <span class="sc">|&gt;</span></span>
-<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(week_day, sentiment) <span class="sc">|&gt;</span></span>
-<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_total_tf_idf_sentiment =</span> <span class="fu">mean</span>(total_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>total_monthly <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
-<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
-<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, total_tf_idf, <span class="sc">-</span>total_tf_idf)) <span class="sc">|&gt;</span></span>
-<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month, sentiment) <span class="sc">|&gt;</span></span>
-<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_total_tf_idf_sentiment =</span> <span class="fu">mean</span>(total_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>total_monthly2 <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
-<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
-<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, total_tf_idf, <span class="sc">-</span>total_tf_idf)) <span class="sc">|&gt;</span></span>
-<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month2, sentiment) <span class="sc">|&gt;</span></span>
-<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_total_tf_idf_sentiment =</span> <span class="fu">mean</span>(total_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating data sets grouped by timeframe for analysis</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>net_weekly <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, sentiment_tf_idf, <span class="sc">-</span>sentiment_tf_idf)) <span class="sc">|&gt;</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id) <span class="sc">|&gt;</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">net_tf_idf_sentiment =</span> <span class="fu">sum</span>(sentiment_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(week_day) <span class="sc">|&gt;</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_net_tf_idf_sentiment =</span> <span class="fu">mean</span>(net_tf_idf_sentiment), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>net_monthly <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, sentiment_tf_idf, <span class="sc">-</span>sentiment_tf_idf)) <span class="sc">|&gt;</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id) <span class="sc">|&gt;</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">net_tf_idf_sentiment =</span> <span class="fu">sum</span>(sentiment_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_net_tf_idf_sentiment =</span> <span class="fu">mean</span>(net_tf_idf_sentiment), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Net monthly2 represents all 24 months, not just per-month averages</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>net_monthly2 <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sentiment_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, sentiment_tf_idf, <span class="sc">-</span>sentiment_tf_idf)) <span class="sc">|&gt;</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id) <span class="sc">|&gt;</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">net_tf_idf_sentiment =</span> <span class="fu">sum</span>(sentiment_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month2) <span class="sc">|&gt;</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_net_tf_idf_sentiment =</span> <span class="fu">mean</span>(net_tf_idf_sentiment), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>total_weekly <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, total_tf_idf, <span class="sc">-</span>total_tf_idf)) <span class="sc">|&gt;</span></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(week_day, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_total_tf_idf_sentiment =</span> <span class="fu">mean</span>(total_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>total_monthly <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, total_tf_idf, <span class="sc">-</span>total_tf_idf)) <span class="sc">|&gt;</span></span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_total_tf_idf_sentiment =</span> <span class="fu">mean</span>(total_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>total_monthly2 <span class="ot">&lt;-</span> diary_tfidf_no_stops_tibble <span class="sc">|&gt;</span></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_tf_idf =</span> <span class="fu">sum</span>(tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_tf_idf =</span> <span class="fu">if_else</span>(sentiment <span class="sc">==</span> <span class="st">"positive"</span>, total_tf_idf, <span class="sc">-</span>total_tf_idf)) <span class="sc">|&gt;</span></span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(diary_tibble_clean, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"text_id"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month2, sentiment) <span class="sc">|&gt;</span></span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_total_tf_idf_sentiment =</span> <span class="fu">mean</span>(total_tf_idf), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stripe pattern for net overlay</span></span>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting sentiment-word TF-IDF by day of the week with a stripe pattern for net overlay</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">data =</span> total_weekly, <span class="fu">aes</span>(week_day, average_total_tf_idf_sentiment, <span class="at">fill =</span> <span class="fu">fct_rev</span>(<span class="fu">as.factor</span>(sentiment)))) <span class="sc">+</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col_pattern</span>(<span class="at">data =</span> net_weekly, <span class="fu">aes</span>(week_day, average_net_tf_idf_sentiment, <span class="at">fill =</span> <span class="st">"net"</span>), <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">pattern =</span> <span class="st">"stripe"</span>, <span class="at">pattern_fill =</span> <span class="st">"black"</span>, <span class="at">pattern_angle =</span> <span class="dv">45</span>, <span class="at">pattern_density =</span> <span class="fl">0.08</span>, <span class="at">pattern_spacing =</span> <span class="fl">0.03</span>) <span class="sc">+</span></span>
@@ -544,16 +541,16 @@ Computation for large collocations may take long time</code></pre>
 <span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"lightgreen"</span>, <span class="st">"#FF474C"</span>, <span class="st">"transparent"</span>)</span>
 <span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="text-as-data-data-exploration_files/figure-html/net-and-total-tf-idf-overlay-graphs-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="text-as-data-data-exploration_files/figure-html/net-and-total-tf-idf-overlay-graphs-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave("tf_idf_by_week.png", width = 1356, height = 838, units = "px", dpi = 192)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># TF-IDF sentiment over 24-month period</span></span>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting TF-IDF sentiment over 24-month period with a stripe pattern for net overlay</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">data =</span> total_monthly2, <span class="fu">aes</span>(month2, average_total_tf_idf_sentiment, <span class="at">fill =</span> <span class="fu">fct_rev</span>(<span class="fu">as.factor</span>(sentiment)))) <span class="sc">+</span></span>
@@ -612,9 +609,9 @@ Computation for large collocations may take long time</code></pre>
 <span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span></span>
 <span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="text-as-data-data-exploration_files/figure-html/tf-idf-sentiment-by-month-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="text-as-data-data-exploration_files/figure-html/tf-idf-sentiment-by-month-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -625,6 +622,7 @@ Computation for large collocations may take long time</code></pre>
 <p>These supplementary graphs aggregate the TF-IDF score of negative and positive sentiment words across both the days of the week and the various months of my grandfather’s journeys, demonstrating both net and gross sentiment (with negative sentiment graphed as a “negative” TF-IDF score accordingly).</p>
 <p>Among the days of the week, on average, it appears that Sundays were the days of the week for which my grandfather had the highest net positive TF-IDF-weighted sentiment, while Fridays on average had slightly net negative TF-IDF-weighted sentiment, with every other day falling somewhere in between with some degree of net positive TF-IDF-weighted sentiment.</p>
 <p>Among the months of my grandfather’s journey, the transition point between his mandatory military service and his world travels at his discharge in May 1956 is extremely clear: the four months after that point are filled with very high net positive TF-IDF-weighted sentiment, unlike the relatively neutral (and often even net negative) TF-IDF-weighted sentiment expressed in prior months.</p>
+<p>Of course, the TF-IDF weighting of sentiment does not capture the true strength of the sentiment expressed (which is purely binary with a Bing dictionary), so perhaps more investigation through other means could confirm or cast doubt on these tentative findings.</p>
 </section>
 </section>
 <section id="calculating-pearson-correlation-between-documents" class="level2">
@@ -677,8 +675,7 @@ Computation for large collocations may take long time</code></pre>
 1       187       307       0.415
 2        86       307       0.397</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#The mean correlation between entries is 0.871, the median correlation between entries is 0.883, and the middle 50% of all entries have correlations ranging from 0.849 to 0.908.  </span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(diary_document_corr_tibble_long<span class="sc">$</span>correlation)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(diary_document_corr_tibble_long<span class="sc">$</span>correlation)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.8715594</code></pre>
 </div>
@@ -687,6 +684,9 @@ Computation for large collocations may take long time</code></pre>
 <pre><code>       0%       25%       50%       75%      100% 
 0.3969486 0.8491960 0.8832032 0.9081537 0.9764734 </code></pre>
 </div>
+</div>
+<p>The mean correlation between entries is <strong>0.871</strong>, the median correlation between entries is <strong>0.883</strong>, and the middle 50% of all entries have correlations ranging from <strong>0.849</strong> to <strong>0.908</strong>.</p>
+<div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a heat map for the Pearson correlations</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>diary_document_corr_tibble_long <span class="sc">|&gt;</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> document1, <span class="at">y =</span> document2, <span class="at">fill =</span> correlation)) <span class="sc">+</span></span>
@@ -697,28 +697,28 @@ Computation for large collocations may take long time</code></pre>
 <span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">high =</span> <span class="st">"red"</span>,</span>
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">mid =</span> <span class="st">"yellow"</span>,</span>
 <span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">midpoint =</span> <span class="fl">0.68</span></span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Pearson Correlation Between Documents"</span>,</span>
 <span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Excluding Identical Correlations &amp; Duplicate Document Pairs"</span>,</span>
 <span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Document 1 Number"</span>,</span>
 <span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Document 2 Number"</span>,</span>
 <span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Correlation"</span></span>
-<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
 <span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
 <span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>() </span>
-<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>    ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="text-as-data-data-exploration_files/figure-html/pearson-correlation-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="text-as-data-data-exploration_files/figure-html/pearson-corr-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave("heatmap_pearson.png")</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Modeling to determine whether a larger difference in days between entries is correlated with a smaller Pearson correlation between documents: Seems not to be the case, and in fact rather that documents with some of the highest date of writing differences (in the 500-600 day range) have slightly higher correlations on average. </span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Modeling to determine whether a larger difference in days between entries is correlated with a smaller Pearson correlation between documents. Seems not to be the case, and in fact rather that documents with some of the highest date of writing differences (in the 500-600 day range) have slightly higher correlations on average. </span></span>
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>diary_document_corr_tibble_long <span class="sc">|&gt;</span></span>
 <span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">daydiff =</span> document2 <span class="sc">-</span> document1) <span class="sc">|&gt;</span></span>
 <span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(daydiff, correlation)) <span class="sc">+</span></span>
@@ -734,9 +734,9 @@ Computation for large collocations may take long time</code></pre>
 <pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="text-as-data-data-exploration_files/figure-html/pearson-correlation-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="text-as-data-data-exploration_files/figure-html/pearson-corr-2-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -747,7 +747,7 @@ Computation for large collocations may take long time</code></pre>
 <p>The two most different document pairs are Text 86 (March 25, 1955) &amp; Text 307 (November 1, 1955) with a Pearson correlation of <strong>0.3969486</strong> and Text 187 (July 4, 1955) &amp; Text 307 (November 1, 1955) with a Pearson correlation of <strong>0.4154998</strong>.</p>
 <p><strong>What questions would you ask from this corpus after seeing the patterns of similarity/differences that you see here? Explain your answer.</strong></p>
 <p>The Pearson correlation is very high between almost every entry of the diary, which is not surprising, as there has been no indication that anyone but my (25- to 27-year-old) grandfather wrote them. I am slightly surprised at the consistency of the correlation being sustained across dates, as is illustrated by the <code>correlation</code> v. <code>diffdate</code> trend line above; I would have expected my grandfather’s vocabulary and structural choices to have evolved more with time, such that temporally separated entries would be less consistent with each other than roughly contemporaneous ones are.</p>
-<p>One question that I would ask from the corpus after seeing the patterns above might be something that Professor Giugni and I discussed when I first proposed using these entries as separate documents: when my grandfather actually wrote each day’s entry. For example, if he mostly wrote entries in January 1956 (around Texts 374, 375, 376, 377, etc.) on the day they described, a handful of days afterwards, or in a large batch at once - one of which seems likely, because he wrote his January 1956 entries back to back in a separate journal that month which lacked explicit space for each day - that might help explain the high correlation between those days; on the other hand, highly correlated entries that are greatly separated in time might suggest that he filled in the earlier entry while writing the later entry (or did both at a third, different time). To this end, I am especially interested in further investigating the visible high-correlation band between texts ~370 and ~400, which seem relatively highly correlated with most other entries and roughly represent the month with the aforementioned abnormal separate-journal situation.</p>
+<p>One question that I would ask from the corpus after seeing the patterns above might be something that Professor Giugni and I discussed when I first proposed using these entries as separate documents: when my grandfather actually wrote each day’s entry. For example, if he mostly wrote entries in January 1956 (around Texts 374, 375, 376, 377, etc.) on the day they described, a handful of days afterwards, or in a large batch at once - one of which seems likely, because he wrote his January 1956 entries back to back in a separate journal that month which lacked explicit space for each day - that might help explain the high correlation between those days. On the other hand, highly correlated entries that are greatly separated in time might suggest that he filled in the earlier entry while writing the later entry (or did both at a third, different time). To this end, I am especially interested in further investigating the visible high-correlation band between texts ~370 and ~400, which seem relatively highly correlated with most other entries and roughly represent the month with the aforementioned abnormal separate-journal situation.</p>
 <p>Furthermore, the heat map in particular shows what appear to be fairly consistent lines across the entry pairs, suggesting that, for example, an entry that is relatively lowly correlated with another entry is likely to have a similar relatively low correlation with the other entries in the diary. I would guess that this is a natural byproduct of most entries being relatively highly correlated with each other, but I would be curious to investigate some of the low-correlation entries in question to determine what makes them relatively unique. My best guess, from examining entries 86 and 187, is that it has to do with their length (both are relatively short), but I am not entirely sure.</p>
 </section>
 </section>
@@ -758,8 +758,8 @@ Computation for large collocations may take long time</code></pre>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>model_info <span class="ot">&lt;-</span> <span class="fu">udpipe_download_model</span>(<span class="at">language =</span> <span class="st">"english-ewt"</span>)</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>ud_model <span class="ot">&lt;-</span> <span class="fu">udpipe_load_model</span>(model_info<span class="sc">$</span>file_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell" data-page-layout="full">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotating the two entries I care about for this example using udpipe; I am using entries 374 and 375 because the low-Pearson-correlation entries described above are short in length and thus appear atypical/possibly susceptible to low sentence counts across which these measures are averaged.</span></span>
+<div class="cell" data-layout-align="center" data-page-layout="full">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotating the two entries I care about for this example using udpipe; I am using entries 374 and 375 because the low-Pearson-correlation entries that I determined and mentioned above are short in length and thus appear atypical/possibly susceptible to abnormally low sentence counts, across which these measures are averaged.</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>diary_374_375_anno <span class="ot">&lt;-</span> diary_tibble_clean <span class="sc">|&gt;</span></span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(text_id <span class="sc">==</span> <span class="dv">375</span> <span class="sc">|</span> text_id <span class="sc">==</span> <span class="dv">374</span>) <span class="sc">|&gt;</span></span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -869,9 +869,9 @@ Computation for large collocations may take long time</code></pre>
 <span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"top"</span></span>
 <span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="text-as-data-data-exploration_files/figure-html/syntactic-complexity-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="text-as-data-data-exploration_files/figure-html/syntactic-complexity-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -900,13 +900,12 @@ Computation for large collocations may take long time</code></pre>
 </section>
 <section id="synthesis" class="level2">
 <h2 class="anchored" data-anchor-id="synthesis">Synthesis</h2>
-<p>My grandfather’s diary entries reflect a generally consistent lexicon across the two years of his travels, but the sentiment measures suggest a substantial change in emotional vocabulary, becoming more positive after his discharge from military service in May 1956. This change is apparent in the TF-IDF-weighted sentiment aggregation I completed in the first section of this exploration, while the high lexical consistency between entries is particularly illustrated by the heat map of Pearson correlations between documents; my analysis of syntactic complexity revealed similar uniformity, but that was expected given that the documents I chose for it were the most lexically similar. After conducting these preliminary comparisons of lexical similarity, syntactic complexity, and TF-IDF-weighted sentiment across entries, I hypothesize that <strong>changes in my grandfather’s emotional (and other thematic linguistic) expression throughout the diary may be more strongly associated with shifts in his life circumstances than with changes in his underlying writing style,</strong> which tentatively appears to be generally consistent. This hypothesis will be something I hope to explore further in my final project along with any other measurements of linguistic change over time that the Pearson correlation and (very limited) two-document syntactic complexity comparison I did in this exploration did not reveal.</p>
+<p>My grandfather’s diary entries reflect a generally consistent lexicon across the two years of his travels, but the sentiment measures suggest a substantial change in emotional vocabulary, becoming more positive after his discharge from military service in May 1956. This change is apparent in the TF-IDF-weighted sentiment aggregation I completed in the first section of this exploration, while the high lexical consistency between entries is particularly illustrated by the heat map of Pearson correlations between documents; my analysis of syntactic complexity revealed similar uniformity, but that was expected given that the documents I chose for it were the most lexically similar. After conducting these preliminary comparisons of lexical similarity, syntactic complexity, and TF-IDF-weighted sentiment across entries, I hypothesize that <strong>changes in my grandfather’s emotional (and other linguistic) expression throughout the diary may be more strongly associated with shifts in his life circumstances than with changes in his underlying writing style,</strong> which tentatively appears to be generally consistent. This hypothesis will be something I hope to explore further in my final project along with any other measurements of linguistic change over time that the Pearson correlation and (very limited) two-document syntactic complexity comparison I did in this exploration did not reveal.</p>
 <p>Of course, the results from this data exploration only represent a snapshot of the trends in my grandfather’s diaristic writings, and there are many uncertainties that remain. For example, my decision to faithfully transcribe my grandfather’s spelling errors, treat each entry as the discrete unit of analysis, and “re-compound” neighboring capital word tokens each impact the calculation of TF-IDF values, Pearson correlations, and syntactic complexity; it is worth investigating whether and to what extent such impact affects my conclusions. Beyond transcription and preprocessing decisions, there are also important limitations inherent in the measures themselves. For example, I used a simple Bing dictionary combined with TF-IDF values to discuss positive and negative sentiment words, but true “net” sentiment might be better captured by dictionaries or other methods that capture sentiments’ intensity and not just their weighted frequency. Further, while Pearson correlations provides a useful measure of lexical similarity, they do not necessarily capture similarity in meaning, rhetorical purpose, or writing style; because the correlations were calculated using a DFM of word frequencies, two entries can be highly correlated even if they discuss entirely different subjects, as long as their distributions of word frequencies are similar, while entries discussing similar subjects may receive relatively low correlations if they differ in length, specific vocabulary, or relative term frequency. The high average correlations I observed across the diary may therefore more truly reflect the persistence of common vocabulary in daily life, diary conventions, or the effects of representing each entry as a vector of word frequencies. Moreover, because I removed stopwords and trimmed infrequent terms before calculating correlations, my results reflect similarity within a particular subset of the vocabulary rather than the entirety of the diary’s language.</p>
-<p>Addressing these pitfalls to develop more robust conclusions will be a key priority of my final analysis. I also hope to expand my syntactic complexity analysis beyond two entries, validate the accuracy of the parser’s annotations, and compare alternative measures of lexical similarity and sentiment (especially length-independent ones like cosine similarity) to determine whether my initial findings hold under different methodological assumptions. Ultimately, I hope that combining these approaches will allow me to distinguish more confidently between changes in what my grandfather wrote about, changes in how he wrote, and changes in how he expressed his feelings about the world around him as I analyze his diaries.</p>
+<p>Addressing these limitations to develop more robust conclusions will be a key priority of my final analysis. I also hope to expand my syntactic complexity analysis beyond two entries, validate the accuracy of the <code>udpipe</code> parser’s annotations, and compare alternative measures of lexical similarity and sentiment (especially length-independent ones like cosine similarity) to determine whether my initial findings hold under different methodological assumptions. Ultimately, I hope that combining these approaches will allow me to distinguish more confidently between changes in what my grandfather wrote about, changes in how he wrote, and changes in how he expressed his feelings about the world around him as I analyze his diaries.</p>
 </section>
 <section id="section" class="level2">
 <h2 class="anchored" data-anchor-id="section"></h2>
-</section>
 </section>
 
 </main>
